@@ -188,7 +188,7 @@ const MINIGAMES = (() => {
         </div>
         <div class="minigame-area" style="gap:18px;position:relative">
           <div style="font-size:12px;color:var(--clr-text-dim)">💡 <em>${wordObj.hint}</em></div>
-          <div style="font-family:var(--font-pixel);font-size:clamp(12px,2vw,16px);color:var(--clr-accent);letter-spacing:2px;font-weight:500">${shuffled.split('').join(' ')}</div>
+          <div style="display:grid;grid-template-columns:repeat(9,1fr);gap:4px;font-family:var(--font-pixel);font-size:10px;color:var(--clr-accent);font-weight:500;max-width:300px;margin:0 auto">${shuffled.split('').map(l => `<div style="background:rgba(255,200,0,0.1);border:1px solid var(--clr-accent);padding:4px;text-align:center;border-radius:4px">${l}</div>`).join('')}</div>
           <div style="font-size:11px;color:var(--clr-text-dim)">${wordObj.word.length} písmen</div>
           <input class="anagram-input" id="ana-input" type="text" placeholder="Tvůj tip..." maxlength="20" autocomplete="off" style="text-transform:uppercase">
           <button class="btn btn-primary" id="ana-submit">POTVRDIT ↵</button>
@@ -278,7 +278,7 @@ const MINIGAMES = (() => {
         </div>
         <div class="minigame-area" style="gap:16px;position:relative;align-items:center">
           <div id="sud-grid" style="display:grid;grid-template-columns:repeat(6,1fr);gap:2px;width:min(280px,85vw)"></div>
-          <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;max-width:320px" id="sud-numpad"></div>
+          <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;max-width:240px" id="sud-numpad"></div>
           <button class="btn btn-primary btn-sm" id="sud-check">ZKONTROLOVAT</button>
           <div id="sud-feedback" style="font-size:13px;min-height:20px;text-align:center;font-weight:700"></div>
         </div>
@@ -317,7 +317,7 @@ const MINIGAMES = (() => {
         const btn = document.createElement('div');
         btn.className = 'sudoku-num';
         btn.textContent = n;
-        btn.style.cssText = 'width:32px;height:32px;font-size:14px;font-weight:900;border-radius:6px;';
+        btn.style.cssText = 'width:28px;height:28px;font-size:13px;font-weight:900;border-radius:6px;';
         btn.addEventListener('click', () => {
           if (!selected) return;
           AUDIO.SFX.click();
@@ -471,9 +471,11 @@ const MINIGAMES = (() => {
       ctx.fillText('BURNED', barX + barW - 8, barY - 8);
 
       ctx.fillStyle = 'rgba(255,255,255,0.1)';
-      const perfectStart = barX + barW * 0.35;
-      const perfectEnd = barX + barW * 0.65;
-      ctx.fillRect(perfectStart, barY, perfectEnd - perfectStart, barH);
+      const perfectStartPct = 0.35 + currentMeat * 0.05;
+      const perfectEndPct = 0.65 - currentMeat * 0.05;
+      const perfectStart = barX + barW * perfectStartPct;
+      const perfectEnd = barX + barW * perfectEndPct;
+      ctx.fillRect(perfectStart, barY, Math.max(0, perfectEnd - perfectStart), barH);
 
       ctx.font = 'bold 48px serif';
       ctx.textAlign = 'center';
@@ -508,7 +510,11 @@ const MINIGAMES = (() => {
       canTap = false;
       const prog = meats[currentMeat].progress;
 
-      if (prog >= 0.35 && prog <= 0.65) {
+      // Progressive difficulty: perfect zone shrinks as you progress
+      const perfectStart = 0.35 + currentMeat * 0.05;
+      const perfectEnd = 0.65 - currentMeat * 0.05;
+
+      if (prog >= perfectStart && prog <= perfectEnd) {
         success++;
         AUDIO.SFX.success();
         document.getElementById('grill-success').textContent = `${success}/5`;
@@ -821,13 +827,13 @@ const MINIGAMES = (() => {
             btn.style.borderColor='#4ade80'; btn.style.background='#0a2a0a';
             AUDIO.SFX.success(); correct++;
             document.getElementById('quiz-fb').style.color='#4ade80';
-            document.getElementById('quiz-fb').innerHTML=`✅ Správně!<div style="font-size:11px;margin-top:6px;font-weight:400">${q.explanation}</div>`;
+            document.getElementById('quiz-fb').innerHTML=`✅ Správně!<div style="font-size:13px;margin-top:8px;font-weight:500;line-height:1.5">${q.explanation}</div>`;
           } else {
             btn.style.borderColor='#ff4d6d'; btn.style.background='#2a0a0a';
             opts.querySelectorAll('div')[q.correct].style.borderColor='#4ade80';
             AUDIO.SFX.fail(); wrong++;
             document.getElementById('quiz-fb').style.color='#ff4d6d';
-            document.getElementById('quiz-fb').innerHTML=`❌ Špatně!<div style="font-size:11px;margin-top:6px;font-weight:400">${q.explanation}</div>`;
+            document.getElementById('quiz-fb').innerHTML=`❌ Špatně!<div style="font-size:13px;margin-top:8px;font-weight:500;line-height:1.5">${q.explanation}</div>`;
           }
           setTimeout(() => { qIdx++; renderQ(); }, 4000);
         });
