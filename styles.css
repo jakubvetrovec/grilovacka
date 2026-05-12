@@ -792,19 +792,19 @@ html, body {
   background: var(--clr-surface);
   border: 2px solid var(--clr-border);
   border-radius: var(--radius);
-  padding: 6px 4px;
+  padding: 4px 3px;
   text-align: center;
   cursor: pointer;
   transition: all 0.2s;
-  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
 }
 .finale-item-card:hover { border-color: var(--clr-primary); transform: translateY(-3px); }
 .finale-item-card.used { opacity: 0.35; cursor: default; transform: none; }
 
-.finale-item-icon { font-size: 18px; }
+.finale-item-icon { font-size: 14px; }
 .finale-item-name {
   font-family: var(--font-pixel);
-  font-size: 5px;
+  font-size: 4px;
   color: var(--clr-text-dim);
   line-height: 1.2;
 }

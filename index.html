@@ -1020,7 +1020,7 @@ function showMinigameConfirmation(loc, idx) {
     'sibenice': 'Uhodni slovo - máš jen pár pokusů!',
     'kviz': 'Odpověz správně na otázky.',
     'natocpivo': 'Počítej, kolik si vylijete piva!',
-    'anglicaky': 'Najdi správné slovo v angličtině.',
+    'anglicaky': 'Klikej v zeleném pásmu, když se kurzor pohybuje! 10x zdvihni činku v správný čas.',
     'hledejingredient': 'Najdi všechny ingredience na obrázku!',
   };
 
@@ -1330,7 +1330,7 @@ function showComboFlash(msg) {
   el.className = 'combo-flash';
   el.textContent = msg;
   document.body.appendChild(el);
-  setTimeout(() => el.remove(), 4000);
+  setTimeout(() => el.remove(), 6000);
 }
 
 function renderFinaleItems() {

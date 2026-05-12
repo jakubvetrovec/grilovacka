@@ -1401,9 +1401,9 @@ const MINIGAMES = (() => {
     let score = 0, fails = 0, running = true;
     let lastTime = null;
     // Oscillating marker
-    let markerX = 0, markerDir = 1, markerSpeed = 220;
+    let markerX = 0, markerDir = 1, markerSpeed = 280;
     const getGreenZone = () => {
-      const shrinkFactor = Math.max(0.8, 1 - score * 0.06);
+      const shrinkFactor = Math.max(0.5, 1 - score * 0.1);
       const zoneWidth = W * 0.24 * shrinkFactor;
       const zoneCenter = W * 0.5;
       return { start: zoneCenter - zoneWidth / 2, end: zoneCenter + zoneWidth / 2 };
@@ -1424,7 +1424,7 @@ const MINIGAMES = (() => {
         document.getElementById('vz-score').textContent = score;
         flashColor = 'green'; flashTimer = 0.4;
         lifting = true; liftTimer = 0.5; targetY = H*0.2;
-        markerSpeed = Math.min(400, 220 + score*18);
+        markerSpeed = Math.min(450, 280 + score*35);
         if (score >= 10) { running = false; setTimeout(()=>showResult(true, `MISTR VZPÍRAČ! 💪\n10 zdvihů!\nTrenérka je nadšená!`),400); }
       } else {
         AUDIO.SFX.fail(); fails++;
