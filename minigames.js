@@ -536,8 +536,13 @@ const MINIGAMES = (() => {
         currentMeat++;
         if (currentMeat >= MEATS) {
           running = false;
-          const msg = success === 5 ? '🔥 GRILL MASTER! 🔥\nVšechna masa dokonalá!' : `${success}/5 SPRÁVNĚ\nNejsi expert na gril!`;
-          showResult(success === 5, msg);
+          const win = success >= 4;
+          const msg = success === 5
+            ? '🔥 GRILL MASTER! 🔥\nVšechna masa dokonalá!'
+            : win
+              ? `🔥 ${success}/5 SPRÁVNĚ!\nGrilování zvládnuto!`
+              : `${success}/5 SPRÁVNĚ\nPříliš mnoho chyb!`;
+          showResult(win, msg);
         } else {
           btn.textContent = 'TAP WHEN READY!';
           btn.style.background = '';

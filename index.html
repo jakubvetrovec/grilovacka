@@ -1009,28 +1009,8 @@ function handleLocChoice(loc, opt, btn, dialogIdx) {
 
 function showMinigameConfirmation(loc, idx) {
   const area = document.getElementById('loc-dialog-area');
-  const gameType = loc.minigame;
-
-  const descriptions = {
-    'pexeso':           'najít páry stejných karet. Máš omezený počet tahů – používej je chytře!',
-    'anagramy':         'poskládat správné slovo ze zmiksovaných písmen.',
-    'sudoku':           'vyplnit číslice do mřížky tak, aby se na každém řádku neopakovala.',
-    'vlastovka':        'grilovat maso – klikni vždy, když se ukazatel pohybuje ve středním zeleném pásmu!',
-    'svetylka':         'zapamatovat si a zopakovat sekvenci rozsvícených světýlek.',
-    'sibenice':         'uhodnout tajné slovo po jednom písmenu – každý špatný tip tě přibližuje šibenici!',
-    'kviz':             'správně odpovědět na sérii otázek v časovém limitu.',
-    'natocpivo':        'načepovat pivo – zastav točení přesně ve chvíli, kdy je ukazatel v zeleném pásmu!',
-    'anglicaky':        '10× zdvihnout činku – klikni vždy, když se ukazatel pohybuje v zeleném pásmu!',
-    'hledejingredient': 'co nejrychleji najít zobrazenou ingredienci v řadě ostatních.',
-  };
-
-  const desc = descriptions[gameType] || 'splnit minihru!';
 
   area.innerHTML = `
-    <div style="text-align:center;font-family:var(--font-body);font-size:12px;font-weight:400;color:var(--clr-text-dim);line-height:1.6;margin-bottom:16px;padding:0 6px;">
-      V následující minihře můžeš získat předmět pro Honzu.<br>
-      <span style="color:var(--clr-text);">Tvým úkolem bude: ${desc}</span>
-    </div>
     <button class="btn btn-primary" id="btn-skip-minigame" style="width:100%;padding:10px;font-size:12px;">⏭ POKRAČOVAT DÁL</button>
   `;
 
@@ -1146,13 +1126,42 @@ document.getElementById('btn-back-map').addEventListener('click', () => {
 // ============================================================
 // MINIGAME
 // ============================================================
+const MINIGAME_DESCRIPTIONS = {
+  'pexeso':           'najít páry stejných karet. Máš omezený počet tahů – používej je chytře!',
+  'anagramy':         'poskládat správné slovo ze zmiksovaných písmen.',
+  'sudoku':           'vyplnit číslice do mřížky tak, aby se na každém řádku neopakovala.',
+  'vlastovka':        'grilovat maso – klikni vždy, když se ukazatel pohybuje ve středním zeleném pásmu!',
+  'svetylka':         'zapamatovat si a zopakovat sekvenci rozsvícených světýlek.',
+  'sibenice':         'uhodnout tajné slovo po jednom písmenu – každý špatný tip tě přibližuje šibenici!',
+  'kviz':             'správně odpovědět na sérii otázek v časovém limitu.',
+  'natocpivo':        'načepovat pivo – zastav točení přesně ve chvíli, kdy je ukazatel v zeleném pásmu!',
+  'anglicaky':        '10× zdvihnout činku – klikni vždy, když se ukazatel pohybuje v zeleném pásmu!',
+  'hledejingredient': 'co nejrychleji najít zobrazenou ingredienci v řadě ostatních.',
+};
+
 function openMinigame(loc) {
   showScreen('minigame');
   document.getElementById('mg-loc-name').textContent = loc.name;
   const content = document.getElementById('minigame-content');
-  content.innerHTML = '';
   MINIGAMES.setup(() => onMinigameWin(loc), () => onMinigameFail(loc));
-  MINIGAMES.start(loc.minigame, content);
+
+  const desc = MINIGAME_DESCRIPTIONS[loc.minigame] || 'splnit minihru!';
+  content.innerHTML = `
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:32px 24px;text-align:center;">
+      <div style="font-family:var(--font-body);font-size:13px;font-weight:400;color:var(--clr-text-dim);line-height:1.8;margin-bottom:28px;max-width:320px;">
+        V následující minihře můžeš získat předmět pro Honzu.<br><br>
+        <span style="color:var(--clr-text);">Tvým úkolem bude: ${desc}</span>
+      </div>
+      <button class="btn btn-primary" id="btn-launch-minigame" style="width:100%;max-width:280px;padding:12px;">▶ ZAHRAJ MINIHRU</button>
+    </div>
+  `;
+
+  document.getElementById('btn-launch-minigame').addEventListener('click', (e) => {
+    e.stopPropagation();
+    AUDIO.SFX.click();
+    content.innerHTML = '';
+    MINIGAMES.start(loc.minigame, content);
+  });
 }
 
 function onMinigameWin(loc) {
