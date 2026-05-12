@@ -33,8 +33,8 @@ const MINIGAMES = (() => {
     else AUDIO.SFX.minigameFail();
   }
 
-  function confirmWin() { if (onWin) onWin(); }
-  function confirmFail() { if (onFail) onFail(); }
+  function confirmWin() { if (onWin) { const cb = onWin; onWin = null; cb(); } }
+  function confirmFail() { if (onFail) { const cb = onFail; onFail = null; cb(); } }
 
   // ===========================================================
   // 1. PEXESO – max 24 tahů, odpočítávání

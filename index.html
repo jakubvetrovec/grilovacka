@@ -948,13 +948,12 @@ function showLocImage(loc, src, idx) {
 
   // Tap/click na panel = pokračovat
   const continueBtn = document.getElementById('btn-continue-loc');
-  const handleContinue = () => {
+  panel.onclick = null;
+  continueBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
     AUDIO.SFX.click();
     advanceLocScene(loc, idx + 1);
-  };
-  continueBtn.addEventListener('click', handleContinue);
-  panel.onclick = null;
-  panel.onclick = handleContinue;
+  });
 }
 
 function showLocDialog(loc, idx) {
