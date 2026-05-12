@@ -562,7 +562,7 @@ const MINIGAMES = (() => {
     ];
     const totalRounds = 6, maxAttempts = 3;
     let sequence = [], playerSeq = [], round = 1, canClick = false;
-    let attempts = 0, startLen = 2;
+    let attempts = 0, startLen = 2, errorRound = 0;
 
     container.innerHTML = `
       <div class="minigame-header">
@@ -611,6 +611,29 @@ const MINIGAMES = (() => {
       }, delay + sequence.length * 650 + 300);
     }
 
+    function playSequenceFromRound(fromRound) {
+      // Generate sequence starting from fromRound onwards
+      const len = startLen + totalRounds - 1;
+      const fullSeq = Array.from({ length: len }, () => Math.floor(Math.random() * 4));
+      sequence = fullSeq;
+      round = fromRound;
+      updateInfo();
+      canClick = false;
+      document.getElementById('sv-status').textContent = `Opakuji od kola ${fromRound}...`;
+      let delay = 500;
+      // Play only up to the length needed for this round
+      const roundLen = startLen + round - 1;
+      for (let i = 0; i < Math.min(roundLen, sequence.length); i++) {
+        const id = sequence[i];
+        setTimeout(() => { light(id, true); AUDIO.SFX.click(); }, delay + i * 650);
+        setTimeout(() => light(id, false), delay + i * 650 + 380);
+      }
+      setTimeout(() => {
+        canClick = true; playerSeq = [];
+        document.getElementById('sv-status').textContent = `Teď ty! Zopakuj sekvenci od kola ${round}.`;
+      }, delay + Math.min(roundLen, sequence.length) * 650 + 300);
+    }
+
     function playerClick(id) {
       if (!canClick) return;
       AUDIO.SFX.click();
@@ -623,10 +646,11 @@ const MINIGAMES = (() => {
         if (attempts >= maxAttempts) {
           showResult(false, `Vyčerpal jsi 3 pokusy!\nJanek je smutný. 😢`); return;
         }
-        document.getElementById('sv-status').textContent = `❌ Chyba! Zbývá ${maxAttempts - attempts} pokus(ů). Opakuji kolo ${round}...`;
+        errorRound = round;
+        document.getElementById('sv-status').textContent = `❌ Chyba! Zbývá ${maxAttempts - attempts} pokus(ů). Opakuji od kola ${round}...`;
         playerSeq = [];
         updateInfo();
-        setTimeout(() => playSequence(), 1800);
+        setTimeout(() => playSequenceFromRound(errorRound), 1800);
         return;
       }
       if (playerSeq.length === sequence.length) {
