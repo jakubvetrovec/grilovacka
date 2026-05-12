@@ -471,11 +471,12 @@ const MINIGAMES = (() => {
       ctx.fillText('BURNED', barX + barW - 8, barY - 8);
 
       ctx.fillStyle = 'rgba(255,255,255,0.1)';
-      const perfectStartPct = 0.35 + currentMeat * 0.05;
-      const perfectEndPct = 0.65 - currentMeat * 0.05;
+      const halfZone = Math.max(0.045, 0.15 - currentMeat * 0.05);
+      const perfectStartPct = 0.50 - halfZone;
+      const perfectEndPct = 0.50 + halfZone;
       const perfectStart = barX + barW * perfectStartPct;
       const perfectEnd = barX + barW * perfectEndPct;
-      ctx.fillRect(perfectStart, barY, Math.max(0, perfectEnd - perfectStart), barH);
+      ctx.fillRect(perfectStart, barY, perfectEnd - perfectStart, barH);
 
       ctx.font = 'bold 48px serif';
       ctx.textAlign = 'center';
@@ -511,8 +512,9 @@ const MINIGAMES = (() => {
       const prog = meats[currentMeat].progress;
 
       // Progressive difficulty: perfect zone shrinks as you progress
-      const perfectStart = 0.35 + currentMeat * 0.05;
-      const perfectEnd = 0.65 - currentMeat * 0.05;
+      const halfZoneTap = Math.max(0.045, 0.15 - currentMeat * 0.05);
+      const perfectStart = 0.50 - halfZoneTap;
+      const perfectEnd = 0.50 + halfZoneTap;
 
       if (prog >= perfectStart && prog <= perfectEnd) {
         success++;
@@ -522,7 +524,7 @@ const MINIGAMES = (() => {
         btn.style.color = '#000';
       } else {
         AUDIO.SFX.fail();
-        if (prog < 0.35) {
+        if (prog < perfectStart) {
           btn.textContent = '❌ TOO RAW!';
         } else {
           btn.textContent = '❌ BURNED!';
