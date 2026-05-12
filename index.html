@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🔥 Grilovačka</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+/* ---- INTRO ANIMACE ---- */
+#screen-intro {
+  background: radial-gradient(ellipse at center, #2d1000 0%, #0d0400 100%);
+  flex-direction: column;
+  overflow-y: auto;
+  align-items: center;
+  justify-content: flex-start;
+}
+.intro-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 16px 32px;
+  width: 100%;
+  max-width: 600px;
+}
+.intro-pig-img {
+  width: 100%;
+  max-width: 520px;
+  border-radius: 16px;
+  display: block;
+  filter: drop-shadow(0 8px 28px rgba(255,100,0,0.55));
+  flex-shrink: 0;
+}
+.intro-glass-title {
+  font-family: var(--font-pixel);
+  font-size: clamp(14px, 3vw, 26px);
+  color: #ffe8b0;
+  text-align: center;
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.7), 0 0 20px rgba(255,150,0,0.8);
+  letter-spacing: 2px;
+  line-height: 1.6;
+  /* liquid glass container */
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(18px) saturate(1.6);
+  -webkit-backdrop-filter: blur(18px) saturate(1.6);
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 18px;
+  padding: 14px 28px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.intro-story {
+  max-width: 560px;
+  padding: 22px 26px;
+  text-align: center;
+  font-size: clamp(13px, 2vw, 16px);
+  line-height: 1.9;
+  color: #f5ecd4;
+  /* liquid glass */
+  background: rgba(15, 8, 0, 0.42);
+  backdrop-filter: blur(22px) saturate(1.8) brightness(1.05);
+  -webkit-backdrop-filter: blur(22px) saturate(1.8) brightness(1.05);
+  border-radius: 20px;
+  border: 1px solid rgba(255,200,100,0.25);
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.45),
+    inset 0 1px 0 rgba(255,220,150,0.18),
+    inset 0 -1px 0 rgba(0,0,0,0.3);
+  margin: 0 8px;
+}
+.intro-story strong { color: #ffcc66; }
+.smoke-particle {
+  position: absolute;
+  font-size: 20px;
+  animation: smokeUp 2s ease-out infinite;
+  opacity: 0;
+}
+@keyframes smokeUp {
+  0% { opacity: 0.7; transform: translateY(0) scale(0.6); }
+  100% { opacity: 0; transform: translateY(-80px) scale(1.4); }
+}
+/* ---- PIXELART MAPA ---- */
+.pixel-map {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  cursor: default;
+  background: #2a4a1a;
+}
+.pixel-map canvas {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.map-pin-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.map-pin-overlay .location-pin {
+  pointer-events: all;
+}
+
+/* ---- PULZUJÍCÍ PINY ---- */
+@keyframes pinPulse {
+  0%   { transform: translate(-50%,-50%) scale(1);   opacity: 0.6; }
+  70%  { transform: translate(-50%,-50%) scale(1.8); opacity: 0; }
+  100% { transform: translate(-50%,-50%) scale(1.8); opacity: 0; }
+}
+.pin-pulse-ring {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: 3px solid currentColor;
+  animation: pinPulse 2s ease-out infinite;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+.pin-pulse-ring:nth-child(2) { animation-delay: 0.8s; }
+
+/* ---- DŮM POPUP ---- */
+.house-popup {
+  background: rgba(10, 5, 0, 0.82);
+  backdrop-filter: blur(20px) saturate(1.8);
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  border: 1px solid rgba(255,200,100,0.25);
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.75), inset 0 1px 0 rgba(255,220,150,0.12);
+  padding: 12px 14px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 280px;
+  max-width: 300px;
+  pointer-events: all;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.house-popup:hover { transform: scale(1.04); }
+.house-popup img {
+  width: 260px;
+  height: auto;
+  border-radius: 10px;
+  display: block;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+}
+.house-popup-name {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  color: #fff;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+  text-align: center;
+  line-height: 1.4;
+  letter-spacing: 1px;
+}
+.house-popup-badge {
+  background: rgba(0,0,0,0.5);
+  border-radius: 8px;
+  padding: 4px 12px;
+  color: #ffe;
+  font-family: var(--font-pixel);
+  font-size: 9px;
+}
+
+/* ---- PIXEL AVATARY ---- */
+.pixel-avatar {
+  image-rendering: pixelated;
+  width: 64px;
+  height: 64px;
+  border-radius: 4px;
+}
+
+/* ---- KOMIKS DIALOG ---- */
+.komiks-scene {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: var(--clr-surface);
+  border-bottom: 2px solid var(--clr-border);
+}
+.komiks-panel {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  padding: 14px 16px;
+  min-height: 90px;
+}
+.komiks-panel.right { flex-direction: row-reverse; }
+.komiks-char {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.komiks-sprite {
+  width: 52px;
+  height: 52px;
+  border-radius: 8px;
+  border: 2px solid rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  position: relative;
+  overflow: hidden;
+}
+.komiks-name {
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  color: var(--clr-text-dim);
+  text-align: center;
+  max-width: 60px;
+  line-height: 1.4;
+}
+.speech-bubble {
+  position: relative;
+  background: #fff;
+  color: #111;
+  border-radius: 14px;
+  padding: 10px 14px;
+  font-size: clamp(12px,1.8vw,15px);
+  line-height: 1.5;
+  max-width: calc(100% - 100px);
+  font-family: var(--font-body);
+  font-weight: 600;
+  animation: bubblePop 0.3s ease;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.3);
+}
+.speech-bubble.dark {
+  background: var(--clr-surface2);
+  color: var(--clr-text);
+  border: 2px solid var(--clr-border);
+}
+@keyframes bubblePop {
+  0% { transform: scale(0.7); opacity: 0; }
+  70% { transform: scale(1.04); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.speech-bubble::before {
+  content: '';
+  position: absolute;
+  bottom: 12px;
+  left: -10px;
+  border: 8px solid transparent;
+  border-right-color: #fff;
+}
+.speech-bubble.dark::before { border-right-color: var(--clr-surface2); }
+.komiks-panel.right .speech-bubble::before {
+  left: auto; right: -10px;
+  border-right-color: transparent;
+  border-left-color: #fff;
+}
+.komiks-panel.right .speech-bubble.dark::before { border-left-color: var(--clr-surface2); }
+
+/* ---- FINALE SLEEP BAR ---- */
+.sleep-bar-fill {
+  transition: width 0.5s, background-color 0.3s;
+}
+
+/* ---- JAN SLEEPING FIGURE ---- */
+.jan-sleeping {
+  font-size: clamp(60px,12vw,100px);
+  animation: janSleep 2s ease-in-out infinite;
+  display: block;
+  text-align: center;
+}
+@keyframes janSleep {
+  0%,100% { transform: rotate(0deg); }
+  30% { transform: rotate(-8deg) translateY(4px); }
+  60% { transform: rotate(5deg); }
+}
+.jan-awake {
+  font-size: clamp(60px,12vw,100px);
+  display: block;
+  text-align: center;
+  animation: janWake 0.5s ease;
+}
+@keyframes janWake {
+  0% { transform: scale(0.9) rotate(-10deg); }
+  60% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     SCREEN 0: INTRO
+     ============================================================ -->
+<div id="screen-intro" class="screen active">
+  <div class="intro-content">
+    <div class="intro-glass-title">🔥 GRILOVAČKA 🔥</div>
+    <img src="Uvodni-obrazovka.png" alt="Grilovačka u Óóček" class="intro-pig-img">
+    <div class="intro-story">Rozdělovský Gang se chystá na grilovačku čuníka. Je tu ale jeden problém – Jan Š. (jméno není z důvodu GDPR uvedeno) má talent usnout na jakékoliv akci dřív, než se pořádně rozjede.
+<br><br>
+Letos to bude jinak! A právě ty jako jediný ho můžeš zachránit!
+<br><br>
+Máš jasný úkol: navštívit všechny kamarády (v libovolném pořadí), kteří se na grilovačku chystají, zjistit co by Janovi Š. mohlo pomoci a získat předměty, které ho udrží vzhůru, a večer mu je správně dávkovat...
+<br><br>
+Čím déle vydrží nespat, tím větší legenda z tebe bude! 🔥</div>
+    <button class="btn btn-primary" id="btn-intro-start" style="margin:4px 0 0;font-size:clamp(10px,2vw,15px);">
+      🐷 CHCI MU POMOCI!
+    </button>
+  </div>
+</div>
+
+<!-- ============================================================
+     SCREEN 1: CHARACTER SELECT
+     ============================================================ -->
+<div id="screen-char" class="screen">
+  <div class="screen-title" style="margin-bottom:4px">VYBER SI POSTAVU</div>
+  <input class="name-input" id="player-name" type="text" placeholder="Jak se jmenuješ?" maxlength="20" autocomplete="off">
+  <div class="char-grid" id="char-grid"></div>
+  <button class="btn btn-primary" id="btn-confirm-char" disabled>JDEME NA TO! 🔥</button>
+</div>
+
+<!-- ============================================================
+     SCREEN 2: MAP
+     ============================================================ -->
+<div id="screen-map" class="screen">
+  <div class="map-header">
+    <div class="map-player-info">
+      <div class="map-avatar-mini" id="map-avatar">😊</div>
+      <div>
+        <div class="map-player-name" id="map-player-name">Hráč</div>
+        <div style="font-size:10px;color:var(--clr-text-dim)" id="map-items-count">0 / 10 předmětů</div>
+      </div>
+    </div>
+    <div class="map-inventory-bar" id="map-inventory"></div>
+    <button class="btn btn-secondary btn-sm" id="btn-to-finale" style="display:none">🔥 GRILOVAČKA!</button>
+  </div>
+  <div style="flex:1;overflow:hidden;position:relative;width:100%;min-height:0;display:flex;flex-direction:column;">
+    <div class="pixel-map" id="pixel-map" style="flex:1;min-height:0;position:relative;">
+      <!-- Nová mapa jako obrázek -->
+      <img id="map-img" src="Mapa_clean.png" alt="Mapa Rozdělov" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;object-position:center;display:block;pointer-events:none;background:#2a3820;">
+      <div class="map-pin-overlay" id="map-pins" style="position:absolute;inset:0;pointer-events:none;"></div>
+      <!-- Popup s domem -->
+      <div id="map-house-popup" style="display:none;position:absolute;z-index:100;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SCREEN 3: LOCATION
+     ============================================================ -->
+<div id="screen-location" class="screen">
+  <div class="loc-header">
+    <button class="btn btn-secondary btn-sm" id="btn-back-map">← MAPA</button>
+    <div id="loc-title" style="font-family:var(--font-pixel);font-size:10px;color:var(--clr-accent);flex:1;text-align:center"></div>
+    <div id="loc-item-badge" style="font-size:22px"></div>
+  </div>
+  <!-- Scéna – obrázek (kliknutím pokračuje) -->
+  <div id="loc-image-panel" style="display:none;flex-shrink:0;width:100%;cursor:pointer;position:relative;background:#0a0a0a;">
+    <img id="loc-scene-img" alt="Scéna" style="width:100%;max-height:52vh;object-fit:contain;display:block;">
+    <div id="loc-tap-hint" style="position:absolute;bottom:10px;right:14px;background:rgba(0,0,0,0.78);color:#fff;font-family:var(--font-pixel);font-size:8px;padding:5px 12px;border-radius:8px;pointer-events:none;letter-spacing:0.5px;">Klepni pro pokračování ▶</div>
+  </div>
+  <!-- Obsah: dialog / výsledek -->
+  <div id="loc-content" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px;align-items:center;">
+    <div id="loc-dialog-area" style="width:100%;max-width:680px;"></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SCREEN 4: MINIGAME
+     ============================================================ -->
+<div id="screen-minigame" class="screen">
+  <div style="width:100%;padding:12px 16px;background:var(--clr-surface);border-bottom:2px solid var(--clr-border);display:flex;align-items:center;gap:10px;flex-shrink:0">
+    <button class="btn btn-secondary btn-sm" id="btn-back-loc">← ZPĚT</button>
+    <div id="mg-loc-name" style="font-family:var(--font-pixel);font-size:9px;color:var(--clr-text-dim);flex:1;text-align:center"></div>
+  </div>
+  <div class="minigame-wrapper" id="minigame-content"></div>
+</div>
+
+<!-- ============================================================
+     SCREEN 5: FINALE
+     ============================================================ -->
+<div id="screen-finale" class="screen">
+  <div class="finale-wrapper">
+    <div class="screen-title">🔥 GRILOVAČKA U ÓÓČEK 🔥</div>
+    <div class="finale-clock" id="fin-clock">18:00</div>
+
+    <div class="finale-scene" style="flex-direction:column;align-items:center;gap:16px">
+      <!-- Jan Š. figure -->
+      <div style="display:flex;align-items:center;gap:20px;width:100%">
+        <div id="jan-figure" style="flex-shrink:0">
+          <span class="jan-sleeping">😴</span>
+        </div>
+        <div style="flex:1">
+          <div class="sleep-bar-label" style="display:flex;justify-content:space-between;font-family:var(--font-pixel);font-size:8px;color:var(--clr-text-dim);margin-bottom:6px">
+            <span>OSPALOST JANA Š.</span>
+            <span id="fin-sleep-val">0%</span>
+          </div>
+          <div class="sleep-bar-track">
+            <div class="sleep-bar-fill" id="fin-sleep-bar" style="width:0%;background:var(--clr-green)"></div>
+          </div>
+          <div class="jan-speech" id="jan-speech" style="margin-top:10px;font-size:13px;color:var(--clr-text-dim);font-style:italic;line-height:1.5">
+            „Tak jo, grilovačka začíná! Cejtim čuníka!" 🐷
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="finale-items">
+      <div class="finale-items-title">INVENTÁŘ – klikni na předmět pro použití</div>
+      <div class="finale-items-grid" id="fin-items"></div>
+    </div>
+
+    <div id="fin-combo-log" style="width:100%;background:var(--clr-surface);border:2px solid var(--clr-border);border-radius:12px;padding:12px;display:none">
+      <div style="font-family:var(--font-pixel);font-size:8px;color:var(--clr-text-dim);margin-bottom:8px">COMBO LOG</div>
+      <div id="fin-combo-entries" style="display:flex;flex-direction:column;gap:6px;font-size:12px;max-height:100px;overflow-y:auto"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SCREEN 6: RESULT
+     ============================================================ -->
+<div id="screen-result" class="screen">
+  <div style="display:flex;flex-direction:column;align-items:center;gap:16px;max-width:500px">
+    <!-- Obrázek - Jan usnu -->
+    <img id="res-jan-image" src="Pictures/Jan_06.png?t=" style="width:100%;max-width:300px;border-radius:8px;border:3px solid var(--clr-accent);">
+
+    <!-- Vtipná hláška -->
+    <div id="res-funny-quote" style="font-size:16px;font-style:italic;text-align:center;color:var(--clr-text-dim);padding:12px;border-left:3px solid var(--clr-accent)">
+      "Jan se slunečku usmívá a chrapá jako traktůrek..."
+    </div>
+
+    <!-- Hráčský info -->
+    <div style="display:flex;align-items:center;gap:12px;width:100%;padding:12px;background:var(--clr-dark-panel);border-radius:8px">
+      <div id="res-player-avatar" style="font-size:48px;">😊</div>
+      <div>
+        <div style="font-weight:bold;font-size:18px;" id="res-player-name">Hráč</div>
+        <div style="color:var(--clr-text-dim)">Grilovač roku 2026</div>
+      </div>
+    </div>
+
+    <!-- Výsledky -->
+    <div style="text-align:center;width:100%">
+      <div class="result-rank" id="res-rank">🏆</div>
+      <div class="result-title" id="res-title">VÝSLEDEK</div>
+      <div class="result-time" id="res-time">00:00</div>
+      <div class="result-desc" id="res-desc"></div>
+    </div>
+
+    <!-- Tlačítka -->
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;width:100%">
+      <button class="btn btn-primary" id="btn-share">📲 SDÍLET DO GANGU</button>
+      <button class="btn btn-secondary" id="btn-replay">🔄 HRÁT ZNOVU</button>
+    </div>
+  </div>
+</div>
+
+<!-- MUTE BUTTON (disabled - no audio) -->
+<button class="mute-btn" id="mute-btn" title="Zvuk" style="display:none">🔊</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="game-data.js"></script>
+<script src="audio.js"></script>
+<script src="minigames.js"></script>
+<script>
+// ============================================================
+// PIXEL ART POSTAVIČKY
+// ============================================================
+const PIXEL_CHARS = {
+  // Každá postava má unikátní barvu těla, vlasů, emoji
+  'Markéta':   { skin:'#f4c4a0', hair:'#c8a060', top:'#9b59b6', emoji:'👩', hairStyle:'mikado' },
+  'Anička':    { skin:'#f4c4a0', hair:'#f0d060', top:'#e74c3c', emoji:'👧', hairStyle:'ponytail' },
+  'Emma':      { skin:'#f4c4a0', hair:'#f0d060', top:'#3498db', emoji:'👧', hairStyle:'ponytail' },
+  'Garp':      { skin:'#8B4513', hair:'#6B3410', top:'#8B4513', emoji:'🐕', hairStyle:'dog' },
+  'Váca':      { skin:'#d4a070', hair:'#1a1a1a', top:'#2c3e50', emoji:'👨', hairStyle:'short' },
+  'Alena':     { skin:'#f4c4a0', hair:'#f0d060', top:'#27ae60', emoji:'👩', hairStyle:'mikado' },
+  'Emča':      { skin:'#f4c4a0', hair:'#f0d060', top:'#e67e22', emoji:'👧', hairStyle:'long' },
+  'Honza':     { skin:'#d4a070', hair:'#1a1a1a', top:'#8e44ad', emoji:'👦', hairStyle:'short' },
+  'Lubo':      { skin:'#d4a070', hair:'#1a1a1a', top:'#c0392b', emoji:'👨', hairStyle:'bald' },
+  'Krista':    { skin:'#f4c4a0', hair:'#8B4513', top:'#16a085', emoji:'👩', hairStyle:'long' },
+  'Thea':      { skin:'#f4c4a0', hair:'#6B3410', top:'#d35400', emoji:'👧', hairStyle:'long' },
+  'Elda':      { skin:'#d4a070', hair:'#f0d060', top:'#2980b9', emoji:'👦', hairStyle:'short' },
+  'Větrák':    { skin:'#d4a070', hair:'#1a1a1a', top:'#27ae60', emoji:'👨', hairStyle:'bald' },
+  'Katka':     { skin:'#f4c4a0', hair:'#f0d060', top:'#8e44ad', emoji:'👩', hairStyle:'long' },
+  'Adéla':     { skin:'#f4c4a0', hair:'#f0d060', top:'#e74c3c', emoji:'👧', hairStyle:'ponytail' },
+  'Adam':      { skin:'#d4a070', hair:'#f0d060', top:'#2980b9', emoji:'👦', hairStyle:'short' },
+  'Janek':     { skin:'#d4a070', hair:'#6B3410', top:'#d35400', emoji:'👨', hairStyle:'messy' },
+  'Petra':     { skin:'#f4c4a0', hair:'#6B3410', top:'#c0392b', emoji:'👩', hairStyle:'ponytail' },
+  'Kubík':     { skin:'#d4a070', hair:'#6B3410', top:'#27ae60', emoji:'👦', hairStyle:'messy' },
+  'Nina':      { skin:'#f4c4a0', hair:'#1a1a1a', top:'#9b59b6', emoji:'👧', hairStyle:'long' },
+  'Jarda':     { skin:'#d4a070', hair:'#1a1a1a', top:'#2c3e50', emoji:'👨', hairStyle:'short' },
+  'Vlastička': { skin:'#f4c4a0', hair:'#1a1a1a', top:'#8e44ad', emoji:'👩', hairStyle:'ponytail' },
+  'Dr. Fíša':  { skin:'#d4a070', hair:'#1a1a1a', top:'#ecf0f1', emoji:'👨‍⚕️', hairStyle:'short' },
+  'Výčepní':   { skin:'#f4b880', hair:'#8B4513', top:'#2c3e50', emoji:'👨', hairStyle:'short' },
+  'Trenérka':  { skin:'#f4c4a0', hair:'#1a1a1a', top:'#e74c3c', emoji:'👩', hairStyle:'ponytail' },
+  'Kněz':      { skin:'#f4c4a0', hair:'#888', top:'#1a1a2e', emoji:'👴', hairStyle:'short' },
+  'Jan Hus':   { skin:'#d4b080', hair:'#4a3010', top:'#2c1a00', emoji:'🧔', hairStyle:'medium' },
+};
+
+
+
+// ============================================================
+// GAME STATE
+// ============================================================
+const GS = {
+  screen: 'intro',
+  playerName: '',
+  playerAvatar: null,
+  inventory: [],
+  usedItems: [],
+  completedLocations: new Set(),
+  failedLocations: new Set(),
+  currentLocation: null,
+  locSceneIdx: 0,
+  dialogDone: false,
+  finaleRunning: false,
+  sleepLevel: 0,
+  gameMinutes: 0,
+  lastItemUsed: null,
+  comboLog: [],
+  finaleInterval: null,
+};
+
+// ============================================================
+// SCREEN NAVIGATION
+// ============================================================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  GS.screen = id;
+}
+
+function toast(msg) {
+  const old = document.querySelector('.toast');
+  if (old) old.remove();
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 3200);
+}
+
+// ============================================================
+// INTRO
+// ============================================================
+document.getElementById('btn-intro-start').addEventListener('click', () => {
+  AUDIO.init(); AUDIO.resume();
+  AUDIO.playMenuMusic();
+  AUDIO.SFX.click();
+  showScreen('char');
+  renderCharSelect();
+});
+
+// ============================================================
+// CHARACTER SELECT – unikátní pixel avatary
+// ============================================================
+// Sprite sheet 4×2 grid, 1408×768px → každá postava 352×384px
+const AVATARS = [
+  { id:'f1', gender:'f', label:'Blondýnka',   emoji:'👩',  img:'Blondyna.png' },
+  { id:'f2', gender:'f', label:'Černovláska', emoji:'👩‍🦰', img:'Cernovlaska.png' },
+  { id:'f3', gender:'f', label:'Bruneta',     emoji:'👩‍🦱', img:'Bruneta.png' },
+  { id:'m1', gender:'m', label:'Plešoun',     emoji:'👨',  img:'Plesoun.png' },
+  { id:'m2', gender:'m', label:'Šedovlas',    emoji:'🧔',  img:'Sedovlas.png' },
+  { id:'m3', gender:'m', label:'Brunet',      emoji:'👨‍🦱', img:'Brunet.png' },
+];
+
+function renderCharSelect() {
+  const grid = document.getElementById('char-grid');
+  grid.innerHTML = '';
+
+  AVATARS.forEach(av => {
+    const card = document.createElement('div');
+    card.className = 'char-card';
+    card.style.cssText = 'cursor:pointer;padding:6px;';
+
+    const img = document.createElement('img');
+    img.src = av.img;
+    img.alt = av.label;
+    img.style.cssText = `
+      width:110px;
+      height:auto;
+      display:block;
+      image-rendering:pixelated;
+      border-radius:6px;
+    `;
+
+    card.appendChild(img);
+
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.char-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      GS.playerAvatar = av;
+      AUDIO.SFX.click();
+      checkCharReady();
+    });
+    grid.appendChild(card);
+  });
+}
+
+document.getElementById('player-name').addEventListener('input', checkCharReady);
+function checkCharReady() {
+  const name = document.getElementById('player-name').value.trim();
+  const ready = name.length >= 2 && GS.playerAvatar;
+  document.getElementById('btn-confirm-char').disabled = !ready;
+}
+document.getElementById('btn-confirm-char').addEventListener('click', () => {
+  GS.playerName = document.getElementById('player-name').value.trim();
+  AUDIO.SFX.item();
+  AUDIO.playMapMusic();
+  showScreen('map');
+  renderMap();
+});
+
+// ============================================================
+// MAP – FOTO MAPA s pulzujícími piny
+// ============================================================
+
+// Mapování čísla lokace → soubor s domem a zobrazované jméno
+const LOCATION_HOUSES = {
+  'sulcovi':   { img: '01_u-Sulcu.png',   label: 'u Šulců' },
+  'vackovi':   { img: '02_u-Vacu.png',    label: 'u Váců' },
+  'krecovi':   { img: '03_u-Krecu.png',   label: 'u Krečů' },
+  'vetraci':   { img: '04_u-Vetraku.png', label: 'u Větráků' },
+  'oocka':     { img: '05_u-Oocek.png',   label: 'u Óóček' },
+  'franci':    { img: '06_u-Francu.png',  label: 'u Franců' },
+  'fisa':      { img: '07_u-Fisi.png',    label: 'u Dr. Fíši' },
+  'kozlovna':  { img: '08_Kozlovna.png',  label: 'Kozlovna' },
+  'posilovna': { img: '09_Posilovna.png', label: 'Posilovna 21' },
+  'kostel':    { img: '10_Kostel.png',    label: 'Kostel' },
+};
+
+// Přesné souřadnice pinů na mapě (% z rozměrů Mapa_clean.png 1400×934)
+// Kalibrováno podle hráčské zpětné vazby
+const LOCATION_COORDS = {
+  'sulcovi':   { x: 52.0, y: 58.0 },
+  'vackovi':   { x: 68.0, y: 28.0 },
+  'krecovi':   { x: 80.0, y: 18.0 },
+  'vetraci':   { x:  8.0, y: 50.0 },
+  'oocka':     { x: 18.0, y: 14.0 },
+  'franci':    { x: 40.0, y: 52.0 },
+  'fisa':      { x: 48.0, y: 38.0 },
+  'kozlovna':  { x: 35.0, y: 85.0 },
+  'posilovna': { x: 72.0, y: 48.0 },
+  'kostel':    { x: 62.0, y: 62.0 },
+};
+
+let activePopupLocId = null;
+
+// Pomocná funkce – vrátí skutečné pixel souřadnice pinu
+// s ohledem na object-fit:contain letterboxing
+function getMapPinPixels(coordPct, mapEl) {
+  const containerW = mapEl.offsetWidth;
+  const containerH = mapEl.offsetHeight;
+  const imgNaturalW = 1400;
+  const imgNaturalH = 934;
+
+  // Spočítej jak je obrázek zobrazený (contain = letterbox)
+  const scaleX = containerW / imgNaturalW;
+  const scaleY = containerH / imgNaturalH;
+  const scale = Math.min(scaleX, scaleY);
+
+  const renderedW = imgNaturalW * scale;
+  const renderedH = imgNaturalH * scale;
+  const offsetX = (containerW - renderedW) / 2;
+  const offsetY = (containerH - renderedH) / 2;
+
+  return {
+    px: offsetX + (coordPct.x / 100) * renderedW,
+    py: offsetY + (coordPct.y / 100) * renderedH,
+    renderedW, renderedH, offsetX, offsetY, scale
+  };
+}
+
+function renderMap() {
+  document.getElementById('map-player-name').textContent = GS.playerName;
+  const av = GS.playerAvatar;
+  document.getElementById('map-avatar').textContent = av ? av.emoji : '😊';
+
+  // Inventory bar
+  const invBar = document.getElementById('map-inventory');
+  invBar.innerHTML = '';
+  Object.values(GAME_DATA.items).forEach(item => {
+    const slot = document.createElement('div');
+    slot.className = 'inv-slot' + (GS.inventory.includes(item.id) ? ' filled' : '');
+    slot.title = item.name;
+    slot.textContent = GS.inventory.includes(item.id) ? item.icon : '';
+    invBar.appendChild(slot);
+  });
+  document.getElementById('map-items-count').textContent = `${GS.inventory.length} / 10 předmětů`;
+
+  const finBtn = document.getElementById('btn-to-finale');
+  finBtn.style.display = GS.inventory.length >= 6 ? 'block' : 'none';
+
+  // Piny
+  const pinsEl = document.getElementById('map-pins');
+  pinsEl.innerHTML = '';
+  pinsEl.style.cssText = 'position:absolute;inset:0;pointer-events:none;';
+
+  const mapEl = document.getElementById('pixel-map');
+
+  GAME_DATA.locations.forEach(loc => {
+    const done = GS.completedLocations.has(loc.id);
+    const failed = GS.failedLocations.has(loc.id);
+    const coords = LOCATION_COORDS[loc.id] || { x: loc.mapX, y: loc.mapY };
+    const { px, py } = getMapPinPixels(coords, mapEl);
+
+    const pinWrap = document.createElement('div');
+    pinWrap.style.cssText = `
+      position:absolute;
+      left:${px}px;
+      top:${py}px;
+      width:0;height:0;
+      pointer-events:none;
+      z-index:10;
+    `;
+
+    // Pulzující kroužky (jen pro nedokončené aktivní lokace)
+    if (!done && !failed) {
+      const ring1 = document.createElement('div');
+      ring1.className = 'pin-pulse-ring';
+      ring1.style.color = loc.color;
+      const ring2 = document.createElement('div');
+      ring2.className = 'pin-pulse-ring';
+      ring2.style.color = loc.color;
+      pinWrap.appendChild(ring1);
+      pinWrap.appendChild(ring2);
+    }
+
+    // Střed pinu – klikatelný kruh
+    const pinDot = document.createElement('div');
+    pinDot.className = 'map-pin-dot';
+    pinDot.style.cssText = `
+      position:absolute;
+      top:50%;left:50%;
+      transform:translate(-50%,-50%);
+      width:40px;height:40px;
+      border-radius:50%;
+      background:${done ? '#1e5c1e' : failed ? '#2a2a2a' : 'rgba(20,10,0,0.75)'};
+      border:3px solid ${done ? '#4ade80' : failed ? '#555' : loc.color};
+      display:flex;align-items:center;justify-content:center;
+      font-size:18px;
+      box-shadow:0 3px 12px rgba(0,0,0,0.6);
+      cursor:${failed ? 'not-allowed' : 'pointer'};
+      pointer-events:all;
+      transition:transform 0.15s, box-shadow 0.15s;
+      z-index:15;
+      backdrop-filter:blur(6px);
+    `;
+    pinDot.textContent = done ? '✅' : loc.emoji;
+    pinDot.title = loc.name;
+
+    if (!failed) {
+      pinDot.addEventListener('mouseenter', () => {
+        pinDot.style.transform = 'translate(-50%,-50%) scale(1.25)';
+        pinDot.style.boxShadow = `0 4px 16px ${loc.color}88`;
+      });
+      pinDot.addEventListener('mouseleave', () => {
+        pinDot.style.transform = 'translate(-50%,-50%) scale(1)';
+        pinDot.style.boxShadow = '0 3px 10px rgba(0,0,0,0.6)';
+      });
+      pinDot.addEventListener('click', (e) => {
+        e.stopPropagation();
+        AUDIO.SFX.click();
+        if (activePopupLocId === loc.id) {
+          closeHousePopup();
+        } else {
+          showHousePopup(loc, coords);
+        }
+      });
+    }
+
+    pinWrap.appendChild(pinDot);
+    pinsEl.appendChild(pinWrap);
+  });
+
+  // Přepočítej piny po načtení obrázku
+  const mapImg = document.getElementById('map-img');
+  if (mapImg && !mapImg.complete) {
+    mapImg.addEventListener('load', () => renderMap(), { once: true });
+  }
+
+  // Klik mimo popup ho zavře
+  mapEl.onclick = (e) => {
+    if (!e.target.closest('.house-popup') && !e.target.closest('#map-house-popup')) {
+      closeHousePopup();
+    }
+  };
+}
+
+function showHousePopup(loc, coords) {
+  closeHousePopup();
+  activePopupLocId = loc.id;
+  const house = LOCATION_HOUSES[loc.id];
+  if (!house) return;
+
+  const done = GS.completedLocations.has(loc.id);
+  const popup = document.getElementById('map-house-popup');
+  popup.innerHTML = '';
+
+  const card = document.createElement('div');
+  card.className = 'house-popup';
+
+  const img = document.createElement('img');
+  img.src = house.img;
+  img.alt = house.label;
+
+  const nameEl = document.createElement('div');
+  nameEl.className = 'house-popup-name';
+  nameEl.textContent = house.label;
+
+  const badge = document.createElement('div');
+  badge.className = 'house-popup-badge';
+  if (done) {
+    badge.textContent = '✅ Navštíveno';
+    badge.style.color = '#7eff9a';
+  } else {
+    badge.textContent = '▶ Vstoupit';
+    badge.style.color = '#ffe47a';
+  }
+
+  card.appendChild(img);
+  card.appendChild(nameEl);
+  card.appendChild(badge);
+
+  card.addEventListener('click', () => {
+    closeHousePopup();
+    openLocation(loc);
+  });
+
+  // VSTOUPIT tlačítko
+  const vstoupitBtn = document.createElement('button');
+  vstoupitBtn.className = 'btn btn-primary';
+  vstoupitBtn.style.cssText = 'width:100%;margin-top:4px;font-size:11px;padding:8px 0;';
+  vstoupitBtn.textContent = done ? '✅ Navštíveno znovu' : '▶ VSTOUPIT';
+  vstoupitBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeHousePopup();
+    openLocation(loc);
+  });
+
+  popup.appendChild(card);
+  popup.appendChild(vstoupitBtn);
+
+  // Pozicování popupu pomocí getMapPinPixels
+  const mapEl = document.getElementById('pixel-map');
+  const { px, py } = getMapPinPixels(coords, mapEl);
+  const mapW = mapEl.offsetWidth;
+  const mapH = mapEl.offsetHeight;
+
+  const popupW = 300;
+  const popupH = 340;
+
+  let left = px - popupW / 2;
+  let top = 12;
+
+  // Clamp aby nepřetekl
+  left = Math.max(4, Math.min(left, mapW - popupW - 4));
+
+  popup.style.cssText = `
+    display:block;
+    position:absolute;
+    left:${left}px;
+    top:${top}px;
+    z-index:100;
+    pointer-events:all;
+    animation:bubblePop 0.22s ease forwards;
+  `;
+}
+
+function closeHousePopup() {
+  activePopupLocId = null;
+  const popup = document.getElementById('map-house-popup');
+  if (popup) popup.style.display = 'none';
+}
+
+// Redraw on resize
+let mapResizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(mapResizeTimer);
+  mapResizeTimer = setTimeout(() => {
+    if (GS.screen === 'map') {
+      closeHousePopup();
+      renderMap();
+    }
+  }, 200);
+});
+
+// ============================================================
+// LOCATION – SCENE-BASED FLOW
+// ============================================================
+function openLocation(loc) {
+  closeHousePopup();
+  GS.currentLocation = loc;
+  GS.locSceneIdx = 0;
+  showScreen('location');
+  document.getElementById('loc-title').textContent = loc.name;
+  const itemData = GAME_DATA.items[loc.item];
+  document.getElementById('loc-item-badge').textContent = itemData.icon;
+
+  if (GS.completedLocations.has(loc.id)) {
+    showLocCompleted(loc);
+    return;
+  }
+  advanceLocScene(loc, 0);
+}
+
+function advanceLocScene(loc, idx) {
+  GS.locSceneIdx = idx;
+  const scenes = loc.scenes;
+  // Fallback pro lokace bez scenes – přímý dialog
+  if (!scenes) { showLocDialogClassic(loc); return; }
+  if (idx >= scenes.length) return;
+  const scene = scenes[idx];
+
+  switch (scene.type) {
+    case 'image':    showLocImage(loc, scene.src, idx); break;
+    case 'dialog':   showLocDialog(loc, idx);           break;
+    case 'minigame': openMinigame(loc);                  break;
+    case 'item':     showLocItem(loc);                   break;
+  }
+}
+
+function showLocImage(loc, src, idx) {
+  const panel = document.getElementById('loc-image-panel');
+  const img   = document.getElementById('loc-scene-img');
+  const area  = document.getElementById('loc-dialog-area');
+
+  panel.style.display = 'block';
+  img.src = src;
+  area.innerHTML = '';
+
+  // Tap/click na panel = pokračovat
+  panel.onclick = null;
+  panel.onclick = () => {
+    AUDIO.SFX.click();
+    advanceLocScene(loc, idx + 1);
+  };
+}
+
+function showLocDialog(loc, idx) {
+  const d    = loc.dialog;
+  const area = document.getElementById('loc-dialog-area');
+  // Skryj obrázek nebo nech viditelný (bez click handleru)
+  const panel = document.getElementById('loc-image-panel');
+  panel.onclick = null;
+  document.getElementById('loc-tap-hint').style.display = 'none';
+
+  area.innerHTML = `
+    <div style="font-family:var(--font-pixel);font-size:8px;color:var(--clr-text-dim);margin-bottom:10px;text-align:center;">
+      Vyber svou odpověď:
+    </div>
+    <div id="loc-options"></div>
+    <div id="loc-feedback" style="margin-top:10px;"></div>
+    <button class="btn btn-secondary" id="btn-play-minigame" style="width:100%;margin-top:12px;font-size:12px;">🎮 ZAHRÁT SI MINIHRU</button>
+  `;
+
+  const optsEl = document.getElementById('loc-options');
+  d.options.forEach((opt, i) => {
+    const btn = document.createElement('div');
+    btn.className = 'dialog-option';
+    btn.textContent = opt.text;
+    btn.addEventListener('click', () => handleLocChoice(loc, opt, btn, idx));
+    optsEl.appendChild(btn);
+  });
+
+  // Minigame button
+  const minigameBtn = document.getElementById('btn-play-minigame');
+  minigameBtn.addEventListener('click', () => {
+    AUDIO.SFX.click();
+    openMinigame(loc);
+  });
+}
+
+function handleLocChoice(loc, opt, btn, dialogIdx) {
+  console.log('📍 handleLocChoice called:', { locId: loc.id, correct: opt.correct, idx: dialogIdx });
+  AUDIO.SFX.click();
+  const all = document.querySelectorAll('#loc-options .dialog-option');
+  all.forEach(b => b.style.pointerEvents = 'none');
+
+  if (opt.correct) {
+    console.log('✅ Correct answer! Advancing scene...');
+    btn.classList.add('correct');
+    AUDIO.SFX.success();
+    document.getElementById('loc-tap-hint').style.display = '';
+    setTimeout(() => {
+      console.log('⏰ Timeout fired, calling advanceLocScene');
+      advanceLocScene(loc, dialogIdx + 1);
+    }, 700);
+  } else {
+    btn.classList.add('wrong');
+    AUDIO.SFX.fail();
+    const fb = document.getElementById('loc-feedback');
+    fb.innerHTML = `<div class="dialog-reaction" style="color:var(--clr-red);font-size:13px;">😅 ${opt.reaction || 'Zkus to znovu!'}</div>`;
+    setTimeout(() => {
+      all.forEach(b => { b.classList.remove('wrong', 'correct'); b.style.pointerEvents = ''; });
+      fb.innerHTML = '';
+    }, 2400);
+  }
+}
+
+function showLocItem(loc) {
+  if (!GS.inventory.includes(loc.item)) GS.inventory.push(loc.item);
+  GS.completedLocations.add(loc.id);
+
+  const item  = GAME_DATA.items[loc.item];
+  const panel = document.getElementById('loc-image-panel');
+  const area  = document.getElementById('loc-dialog-area');
+
+  panel.style.display = 'none';
+  panel.onclick = null;
+
+  area.innerHTML = `
+    <div class="dialog-success" style="text-align:center;padding:20px 0;">
+      <div style="font-size:52px;margin-bottom:12px;">${item.icon}</div>
+      <strong style="color:var(--clr-accent);font-size:18px;">${item.name}</strong>
+      <div style="color:var(--clr-text-dim);font-size:13px;margin-top:10px;line-height:1.6;font-style:italic;">
+        ${loc.dialog.successSub || ''}
+      </div>
+    </div>
+    <button class="btn btn-primary" id="btn-loc-to-map" style="margin-top:8px;">← ZPĚT NA MAPU</button>
+  `;
+  document.getElementById('btn-loc-to-map').addEventListener('click', () => {
+    AUDIO.SFX.click();
+    showScreen('map');
+    renderMap();
+  });
+  toast(`🎉 Získal jsi: ${item.icon} ${item.name}`);
+}
+
+function showLocCompleted(loc) {
+  const item  = GAME_DATA.items[loc.item];
+  const panel = document.getElementById('loc-image-panel');
+  const area  = document.getElementById('loc-dialog-area');
+  panel.style.display = 'none';
+  area.innerHTML = `
+    <div class="dialog-success" style="text-align:center;padding:20px 0;">
+      <div style="font-size:40px;margin-bottom:8px;">${item.icon}</div>
+      <strong style="color:var(--clr-accent);">${item.name}</strong>
+      <div style="color:var(--clr-text-dim);font-size:13px;margin-top:8px;">✅ Předmět již získán</div>
+      <div style="color:var(--clr-text-dim);font-size:12px;margin-top:6px;font-style:italic;">${loc.dialog.successText || ''}</div>
+    </div>
+    <button class="btn btn-secondary" id="btn-loc-done-map" style="margin-top:8px;">← ZPĚT NA MAPU</button>
+  `;
+  document.getElementById('btn-loc-done-map').addEventListener('click', () => {
+    AUDIO.SFX.click();
+    showScreen('map');
+    renderMap();
+  });
+}
+
+// Fallback – lokace bez scenes (staré lokace)
+function showLocDialogClassic(loc) {
+  const d = loc.dialog;
+  document.getElementById('loc-image-panel').style.display = 'none';
+  const area = document.getElementById('loc-dialog-area');
+  area.innerHTML = `
+    <div class="dialog-box">
+      <div class="dialog-speaker">${d.speakerEmoji || ''} ${d.speaker}</div>
+      <div class="dialog-text">„${d.text}"</div>
+      <div style="font-family:var(--font-pixel);font-size:8px;color:var(--clr-text-dim);margin:12px 0 8px;">Vyber svou odpověď:</div>
+      <div id="loc-options"></div>
+      <div id="loc-feedback"></div>
+    </div>
+  `;
+  const optsEl = document.getElementById('loc-options');
+  d.options.forEach((opt, i) => {
+    const btn = document.createElement('div');
+    btn.className = 'dialog-option';
+    btn.textContent = `${String.fromCharCode(65+i)}) ${opt.text}`;
+    btn.addEventListener('click', () => {
+      AUDIO.SFX.click();
+      const all = document.querySelectorAll('#loc-options .dialog-option');
+      all.forEach(b => b.style.pointerEvents = 'none');
+      if (opt.correct) {
+        btn.classList.add('correct');
+        AUDIO.SFX.success();
+        setTimeout(() => {
+          // Show success then open minigame
+          const item = GAME_DATA.items[loc.item];
+          area.innerHTML = `<div class="dialog-success"><div style="font-size:22px">${item.icon}</div><strong style="color:var(--clr-accent)">${item.name}</strong><br><em style="color:var(--clr-text-dim);font-size:13px">${d.successSub}</em></div><button class="btn btn-primary" id="btn-classic-mg">▶ ZAHRAJ MINIHRU</button>`;
+          document.getElementById('btn-classic-mg').addEventListener('click', () => openMinigame(loc));
+        }, 600);
+      } else {
+        btn.classList.add('wrong');
+        AUDIO.SFX.fail();
+        const fb = document.getElementById('loc-feedback');
+        fb.innerHTML = `<div class="dialog-reaction">😅 ${opt.reaction || 'Zkus to znovu!'}</div>`;
+        setTimeout(() => {
+          all.forEach(b => { b.classList.remove('wrong','correct'); b.style.pointerEvents=''; });
+          fb.innerHTML = '';
+        }, 2200);
+      }
+    });
+    optsEl.appendChild(btn);
+  });
+}
+
+document.getElementById('btn-back-map').addEventListener('click', () => {
+  AUDIO.SFX.click();
+  showScreen('map');
+  renderMap();
+});
+
+// ============================================================
+// MINIGAME
+// ============================================================
+function openMinigame(loc) {
+  showScreen('minigame');
+  document.getElementById('mg-loc-name').textContent = loc.name;
+  const content = document.getElementById('minigame-content');
+  content.innerHTML = '';
+  MINIGAMES.setup(() => onMinigameWin(loc), () => onMinigameFail(loc));
+  MINIGAMES.start(loc.minigame, content);
+}
+
+function onMinigameWin(loc) {
+  AUDIO.SFX.item();
+  if (loc.scenes) {
+    // Scene-based flow: pokračuj na další scénu
+    showScreen('location');
+    advanceLocScene(loc, GS.locSceneIdx + 1);
+  } else {
+    // Starý flow: přidej předmět a jdi na mapu
+    if (!GS.inventory.includes(loc.item)) GS.inventory.push(loc.item);
+    GS.completedLocations.add(loc.id);
+    toast(`🎉 Získal jsi: ${GAME_DATA.items[loc.item].icon} ${GAME_DATA.items[loc.item].name}`);
+    setTimeout(() => { showScreen('map'); renderMap(); }, 1800);
+  }
+}
+
+function onMinigameFail(loc) {
+  GS.failedLocations.add(loc.id);
+  toast('😢 Lokace se uzamkla. Zkus jinou!');
+  showScreen('map');
+  renderMap();
+}
+
+document.getElementById('btn-back-loc').addEventListener('click', () => {
+  AUDIO.SFX.click();
+  if (window._mgCleanup) { window._mgCleanup(); window._mgCleanup = null; }
+  showScreen('location');
+});
+
+// ============================================================
+// FINALE
+// ============================================================
+document.getElementById('btn-to-finale').addEventListener('click', () => {
+  AUDIO.SFX.click();
+  AUDIO.playFinaleMusic();
+  startFinale();
+  showScreen('finale');
+});
+
+function startFinale() {
+  GS.sleepLevel = 0;
+  GS.gameMinutes = 0;
+  GS.usedItems = [];
+  GS.lastItemUsed = null;
+  GS.comboLog = [];
+  GS.finaleRunning = true;
+  renderFinaleItems();
+  updateFinaleUI();
+
+  // 1s real = 7.5 game minutes (1.5x faster than original 5min)
+  GS.finaleInterval = setInterval(() => {
+    if (!GS.finaleRunning) return;
+    GS.gameMinutes += 7.5;
+    GS.sleepLevel = Math.min(100, GS.sleepLevel + 6.67);
+    updateFinaleUI();
+    if (GS.sleepLevel >= 80) pauseFinale();
+    if (GS.gameMinutes >= 840) endFinale(true);
+  }, 1000);
+}
+
+function pauseFinale() {
+  if (!GS.finaleRunning) return;
+  clearInterval(GS.finaleInterval);
+  GS.finaleRunning = false;
+  const availItems = GS.inventory.filter(id => !GS.usedItems.includes(id));
+  if (availItems.length === 0) { setTimeout(() => endFinale(false), 800); return; }
+  AUDIO.SFX.sleepy();
+  document.getElementById('jan-speech').textContent = '„Hele, mně se začínaj klížit oči... máš něco, co by mě udrželo při životě?" 😴';
+  updateJanFigure(GS.sleepLevel);
+  document.querySelectorAll('.finale-item-card:not(.used)').forEach(card => {
+    card.style.outline = '2px solid var(--clr-accent)';
+    card.style.animation = 'pulseFinal 0.8s infinite';
+  });
+}
+
+function resumeFinale() {
+  if (GS.finaleRunning) return;
+  document.querySelectorAll('.finale-item-card').forEach(c => { c.style.animation=''; c.style.outline=''; });
+  GS.finaleRunning = true;
+  GS.finaleInterval = setInterval(() => {
+    if (!GS.finaleRunning) return;
+    GS.gameMinutes += 7.5;
+    GS.sleepLevel = Math.min(100, GS.sleepLevel + 6.67);
+    updateFinaleUI();
+    if (GS.sleepLevel >= 80) pauseFinale();
+    if (GS.gameMinutes >= 840) endFinale(true);
+  }, 1000);
+}
+
+function updateJanFigure(sleep) {
+  const fig = document.getElementById('jan-figure');
+  if (sleep >= 80) {
+    fig.innerHTML = `<span class="jan-sleeping">😴</span>`;
+  } else if (sleep >= 50) {
+    fig.innerHTML = `<span class="jan-sleeping" style="animation-duration:3s">😪</span>`;
+  } else if (sleep >= 30) {
+    fig.innerHTML = `<span style="font-size:clamp(60px,12vw,100px);display:block;text-align:center">😑</span>`;
+  } else {
+    fig.innerHTML = `<span class="jan-awake">😄</span>`;
+  }
+}
+
+function useItem(itemId) {
+  AUDIO.SFX.wake();
+  const item = GAME_DATA.items[itemId];
+  GS.usedItems.push(itemId);
+
+  let reduction = item.sleepReduction;
+  let comboMsg = '';
+  const prev = GS.lastItemUsed;
+
+  if (itemId === 'svecena' && GS.usedItems.length === 1) {
+    reduction += 30;
+    comboMsg = '✨ SVATÝ PROKOP! +30 BONUS! Patron bdělosti v akci!';
+  }
+
+  if (prev) {
+    const combo = GAME_DATA.combos.find(c => c.items[0]===prev && c.items[1]===itemId);
+    if (combo) { reduction += combo.bonus; comboMsg = `🔥 KOMBO: ${combo.label} +${combo.bonus}!`; }
+    const antiCancel = GAME_DATA.anticombos.find(a => a.after===prev && a.cancels===itemId);
+    if (antiCancel) { reduction = 0; comboMsg = `💀 ANTI-KOMBO: ${antiCancel.desc}`; }
+    const antiReduce = GAME_DATA.anticombos.find(a => a.after===prev && a.targets && a.targets.includes(itemId));
+    if (antiReduce) { reduction = Math.max(0, reduction-antiReduce.reduces); comboMsg = `⚠️ SLABÝ MIX: ${antiReduce.desc}`; }
+  }
+
+  GS.sleepLevel = Math.max(0, GS.sleepLevel - reduction);
+  GS.lastItemUsed = itemId;
+
+  const reactions = {
+    smetak: '„YEAH! Jsem Brian May říznutej Jimi Hendrixem! 🎸 Kdo chce zahrát Divoký koně?! 🐎"',
+    kybl: '„AAAUGH! Studená! Studená! Jsem vzhůru! Celý mokrý, ale vzhůru!" 🥶',
+    katalog: '„Hmmm... nový V70 tříválcový diesel? Tahle tichá síla při 2200 RPM... SKVĚLÉ!" 🚜',
+    helma: '„Au! Au au au! Dobrý! Dobrý! Nespim! Nespim! Absolutně nespim!" 👀',
+    plzen: '„Mmm... Plzeň. Perfektní. Cítím prokrvení od mozku až k patě!" 🍺',
+    koliucky: '„JARDO TY BEJKU! Ale... jsem vzhůru. Naprosto, jednoznačně vzhůru. A nějak se mi to líbí..." 🥰',
+    paratka: '„Fíšo... doktůrku, ty génie... Teď vidím každého komára v okruhu 50 metrů." 🥢',
+    svecena: '„Ve jménu Páně! Cítím sílu! Nebo to je duch??" 💨',
+    nandralon: '„Cítím... koňskou sílu! Jdu něco zapálit! Nemáte tu někdo vánoční stromek?" 🎄',
+    panak: '„Tohle není obyčejný panák! Tohle je ZELENÁ - cítím se jak Hulk..." 💚',
+  };
+  document.getElementById('jan-speech').textContent = reactions[itemId] || '„Uh... to fungovalo!"';
+  updateJanFigure(GS.sleepLevel);
+
+  if (comboMsg) {
+    GS.comboLog.push(comboMsg);
+    showComboFlash(comboMsg);
+    const log = document.getElementById('fin-combo-log');
+    log.style.display = 'block';
+    const entries = document.getElementById('fin-combo-entries');
+    const entry = document.createElement('div');
+    entry.style.color = comboMsg.includes('KOMBO') ? 'var(--clr-accent)' : comboMsg.includes('ANTI') ? 'var(--clr-red)' : 'var(--clr-text-dim)';
+    entry.textContent = comboMsg;
+    entries.appendChild(entry);
+    entries.scrollTop = entries.scrollHeight;
+  }
+
+  renderFinaleItems();
+  updateFinaleUI();
+  setTimeout(() => { if (GS.sleepLevel < 80) resumeFinale(); else pauseFinale(); }, 1500);
+}
+
+function showComboFlash(msg) {
+  const el = document.createElement('div');
+  el.className = 'combo-flash';
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 2200);
+}
+
+function renderFinaleItems() {
+  const grid = document.getElementById('fin-items');
+  grid.innerHTML = '';
+  GS.inventory.forEach(itemId => {
+    const item = GAME_DATA.items[itemId];
+    const used = GS.usedItems.includes(itemId);
+    const card = document.createElement('div');
+    card.className = 'finale-item-card' + (used ? ' used' : '');
+    card.innerHTML = `
+      <div class="finale-item-icon">${item.icon}</div>
+      <div class="finale-item-name">${item.name}</div>
+      <div class="finale-item-power" style="color:${used?'var(--clr-text-dim)':'var(--clr-green)'}">
+        ${used ? '✓ použito' : '🔋 aktivovat'}
+      </div>
+    `;
+    if (!used) card.addEventListener('click', () => { AUDIO.SFX.click(); useItem(itemId); });
+    grid.appendChild(card);
+  });
+}
+
+function updateFinaleUI() {
+  const totalMins = 18*60 + GS.gameMinutes;
+  const h = Math.floor(totalMins/60) % 24;
+  const m = Math.floor(totalMins % 60);
+  document.getElementById('fin-clock').textContent = String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
+
+  const pct = Math.min(100, GS.sleepLevel);
+  const bar = document.getElementById('fin-sleep-bar');
+  bar.style.width = pct+'%';
+  bar.style.background = pct < 40 ? 'var(--clr-green)' : pct < 70 ? '#f39c12' : 'var(--clr-red)';
+  document.getElementById('fin-sleep-val').textContent = Math.round(pct)+'%';
+
+  if (!GS.finaleRunning || pct < 50) updateJanFigure(pct);
+
+  if (pct >= 100) { updateJanFigure(100); endFinale(false); }
+}
+
+function endFinale(survived) {
+  clearInterval(GS.finaleInterval);
+  GS.finaleRunning = false;
+  const totalMins = 18*60 + GS.gameMinutes;
+  const h = Math.floor(totalMins/60)%24, m = Math.floor(totalMins%60);
+  const timeStr = String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
+  let rank, title, desc;
+  if (survived) {
+    rank='🏆'; title='LEGENDA!\nJan Š. přežil do rána!';
+    desc='Dokázal jsi to! Jan Š. vydržel celou noc a griloval čuníka jako šéf!';
+  } else if (GS.gameMinutes>=480) {
+    rank='🥇'; title='VÝBORNÝ VÝKON!';
+    desc=`Jan Š. vydržel do ${timeStr}. Solidní jízda!`;
+  } else if (GS.gameMinutes>=240) {
+    rank='🥈'; title='SOLIDNÍ POKUS';
+    desc=`Jan Š. vydržel do ${timeStr}. Příště zkus lepší kombinaci!`;
+  } else {
+    rank='🥉'; title='PŘÍŠTĚ LÉPE...';
+    desc=`Jan Š. usnul v ${timeStr}. Garp ho olizoval, ale nepomohlo. 🐕`;
+  }
+
+  // Vtipné hlášky když Jan usne
+  const funnyQuotes = [
+    '"Jan se slunečku usmívá a chrapá jako traktůrek..."',
+    '"Honza konečně sní svojí legendu... v očích." 😴',
+    '"Vítězství! Jan usul během hymny Rozdělovského gangu!" 🏳️',
+    '"Chrapot echem zní halou. Garp se těší na večeři..." 🐕',
+    '"Grilovačka pokračuje bez průvodce. Jan si sní o V70 dieselu..." 🚗'
+  ];
+  const randomQuote = funnyQuotes[Math.floor(Math.random() * funnyQuotes.length)];
+
+  // Vyplň nové prvky
+  document.getElementById('res-rank').textContent = rank;
+  document.getElementById('res-title').textContent = title;
+  document.getElementById('res-time').textContent = timeStr;
+  document.getElementById('res-desc').textContent = desc;
+  document.getElementById('res-funny-quote').textContent = randomQuote;
+  document.getElementById('res-player-name').textContent = GS.playerName || 'Hráč';
+  document.getElementById('res-jan-image').src = 'Pictures/Jan_06.png?t=' + Date.now();
+
+  // Avatar hráče (emoji z jeho postavy)
+  const avatarData = GAME_DATA.avatars.find(a => a.id === GS.avatar);
+  document.getElementById('res-player-avatar').textContent = avatarData?.emoji || '😊';
+
+  setTimeout(() => showScreen('result'), 1500);
+}
+
+// ============================================================
+// RESULT
+// ============================================================
+document.getElementById('btn-share').addEventListener('click', async () => {
+  AUDIO.SFX.click();
+  const btn = document.getElementById('btn-share');
+  const origText = btn.textContent;
+  btn.textContent = '⏳ Vytváření...';
+  btn.disabled = true;
+
+  try {
+    // Capture result content div (excluding buttons)
+    const resultContent = document.querySelector('#screen-result > div');
+    const canvas = await html2canvas(resultContent, {
+      backgroundColor: '#1a1a1a',
+      scale: 2,
+      useCORS: true,
+      logging: false,
+      allowTaint: true
+    });
+
+    // Convert to blob and create downloadable image
+    canvas.toBlob(async (blob) => {
+      const time = document.getElementById('res-time').textContent;
+      const rank = document.getElementById('res-rank').textContent;
+      const msg = `${rank} Hrál jsem Grilovačku u Óóček a Jan Š. vydržel do ${time}! Zvládneš déle? 🔥🐷\n#grilovacka #Kladno #RozdelovskyGang`;
+
+      // Try native share API first (mobile)
+      if (navigator.canShare && navigator.canShare({ files: [new File([blob], 'grilovacka-vysledek.png', { type:'image/png' })] })) {
+        try {
+          await navigator.share({
+            title: 'Grilovačka u Óóček',
+            text: msg,
+            files: [new File([blob], 'grilovacka-vysledek.png', { type:'image/png' })]
+          });
+        } catch(e) {
+          // User cancelled share
+        }
+      } else {
+        // Fallback: download image
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'grilovacka-vysledek.png';
+        link.click();
+        URL.revokeObjectURL(link.href);
+        toast('🖼️ Obrázek stažen! Teď ho sdílej ve Whatsappu!');
+      }
+
+      btn.textContent = origText;
+      btn.disabled = false;
+    }, 'image/png');
+  } catch(err) {
+    console.error('Export error:', err);
+    toast('❌ Chyba při vytváření obrázku');
+    btn.textContent = origText;
+    btn.disabled = false;
+  }
+});
+
+document.getElementById('btn-replay').addEventListener('click', () => {
+  AUDIO.SFX.click();
+  GS.inventory=[];GS.usedItems=[];GS.completedLocations=new Set();GS.failedLocations=new Set();
+  GS.currentLocation=null;GS.dialogDone=false;GS.playerName='';GS.playerAvatar=null;
+  clearInterval(GS.finaleInterval);GS.finaleRunning=false;
+  AUDIO.playMenuMusic();
+  showScreen('intro');
+});
+
+// ============================================================
+// MUTE
+// ============================================================
+document.getElementById('mute-btn').addEventListener('click', () => {
+  AUDIO.init();
+  const muted = AUDIO.toggleMute();
+  document.getElementById('mute-btn').textContent = muted ? '🔇' : '🔊';
+  AUDIO.SFX.click();
+});
+
+// ============================================================
+// KEYBOARD
+// ============================================================
+document.addEventListener('keydown', e => {
+  if (e.key==='Escape') {
+    if (GS.screen==='location') document.getElementById('btn-back-map').click();
+    if (GS.screen==='minigame') document.getElementById('btn-back-loc').click();
+  }
+});
+
+// ============================================================
+// AUTO-SAVE
+// ============================================================
+setInterval(() => {
+  try {
+    localStorage.setItem('grilovacka_v2', JSON.stringify({
+      playerName:GS.playerName, playerAvatar:GS.playerAvatar,
+      inventory:GS.inventory,
+      completedLocations:[...GS.completedLocations],
+      failedLocations:[...GS.failedLocations],
+    }));
+  } catch(e){}
+}, 5000);
+</script>
+</body>
+</html>
