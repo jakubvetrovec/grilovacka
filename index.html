@@ -359,7 +359,6 @@ Máš jasný úkol: navštívit všechny kamarády, kteří se na grilovačku ch
   <!-- Scéna – obrázek (kliknutím pokračuje) -->
   <div id="loc-image-panel" style="display:none;flex-shrink:0;width:100%;cursor:pointer;position:relative;background:#0a0a0a;">
     <img id="loc-scene-img" alt="Scéna" style="width:100%;max-height:52vh;object-fit:contain;display:block;">
-    <div id="loc-tap-hint" style="position:absolute;bottom:10px;right:14px;background:rgba(0,0,0,0.78);color:#fff;font-family:var(--font-pixel);font-size:8px;padding:5px 12px;border-radius:8px;pointer-events:none;letter-spacing:0.5px;">Klepni pro pokračování ▶</div>
   </div>
   <!-- Obsah: dialog / výsledek -->
   <div id="loc-content" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px;align-items:center;">
@@ -963,7 +962,6 @@ function showLocDialog(loc, idx) {
   // Skryj obrázek nebo nech viditelný (bez click handleru)
   const panel = document.getElementById('loc-image-panel');
   panel.onclick = null;
-  document.getElementById('loc-tap-hint').style.display = 'none';
 
   area.innerHTML = `
     <div style="font-family:var(--font-pixel);font-size:8px;color:var(--clr-text-dim);margin-bottom:10px;text-align:center;">
@@ -971,7 +969,6 @@ function showLocDialog(loc, idx) {
     </div>
     <div id="loc-options"></div>
     <div id="loc-feedback" style="margin-top:10px;"></div>
-    <button class="btn btn-secondary" id="btn-play-minigame" style="width:100%;margin-top:12px;font-size:12px;">🎮 ZAHRÁT SI MINIHRU</button>
   `;
 
   const optsEl = document.getElementById('loc-options');
@@ -982,13 +979,6 @@ function showLocDialog(loc, idx) {
     btn.addEventListener('click', () => handleLocChoice(loc, opt, btn, idx));
     optsEl.appendChild(btn);
   });
-
-  // Minigame button
-  const minigameBtn = document.getElementById('btn-play-minigame');
-  minigameBtn.addEventListener('click', () => {
-    AUDIO.SFX.click();
-    openMinigame(loc);
-  });
 }
 
 function handleLocChoice(loc, opt, btn, dialogIdx) {
@@ -998,13 +988,12 @@ function handleLocChoice(loc, opt, btn, dialogIdx) {
   all.forEach(b => b.style.pointerEvents = 'none');
 
   if (opt.correct) {
-    console.log('✅ Correct answer! Advancing scene...');
+    console.log('✅ Correct answer! Showing minigame confirmation...');
     btn.classList.add('correct');
     AUDIO.SFX.success();
-    document.getElementById('loc-tap-hint').style.display = '';
     setTimeout(() => {
-      console.log('⏰ Timeout fired, calling advanceLocScene');
-      advanceLocScene(loc, dialogIdx + 1);
+      console.log('⏰ Timeout fired, showing minigame confirmation');
+      showMinigameConfirmation(loc, dialogIdx);
     }, 700);
   } else {
     btn.classList.add('wrong');
@@ -1016,6 +1005,47 @@ function handleLocChoice(loc, opt, btn, dialogIdx) {
       fb.innerHTML = '';
     }, 2400);
   }
+}
+
+function showMinigameConfirmation(loc, idx) {
+  const area = document.getElementById('loc-dialog-area');
+  const gameType = loc.minigame;
+
+  const descriptions = {
+    'pexeso': 'Hrajeme Pexeso! Najdi si páry stejných karet.',
+    'anagramy': 'Poskládej slova ze zmiksovaných písmen!',
+    'sudoku': 'Vyplň číslice tak, aby se neopakovala.',
+    'vlastovka': 'Griluj maso a dávej si pozor na čas!',
+    'svetylka': 'Pamatuj si, která světýlka svítí.',
+    'sibenice': 'Uhodni slovo - máš jen pár pokusů!',
+    'kviz': 'Odpověz správně na otázky.',
+    'natocpivo': 'Počítej, kolik si vylijete piva!',
+    'anglicaky': 'Najdi správné slovo v angličtině.',
+    'hledejingredient': 'Najdi všechny ingredience na obrázku!',
+  };
+
+  const desc = descriptions[gameType] || 'Zahraj si minihru!';
+
+  area.innerHTML = `
+    <div style="text-align:center;font-family:var(--font-pixel);font-size:13px;color:var(--clr-text);margin-bottom:16px;">
+      ${desc}
+    </div>
+    <button class="btn btn-primary" id="btn-confirm-minigame" style="width:100%;padding:10px;font-size:14px;margin-bottom:8px;">🎮 ZAHRÁT SI MINIHRU</button>
+    <button class="btn btn-secondary" id="btn-skip-minigame" style="width:100%;padding:10px;font-size:12px;">⏭ POKRAČOVAT DAL</button>
+  `;
+
+  const confirmBtn = document.getElementById('btn-confirm-minigame');
+  const skipBtn = document.getElementById('btn-skip-minigame');
+
+  confirmBtn.addEventListener('click', () => {
+    AUDIO.SFX.click();
+    openMinigame(loc);
+  });
+
+  skipBtn.addEventListener('click', () => {
+    AUDIO.SFX.click();
+    advanceLocScene(loc, idx + 1);
+  });
 }
 
 function showLocItem(loc) {
