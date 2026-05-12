@@ -383,27 +383,33 @@ Máš jasný úkol: navštívit všechny kamarády, kteří se na grilovačku ch
 <div id="screen-finale" class="screen">
   <div class="finale-wrapper">
     <div class="screen-title">🔥 GRILOVAČKA U ÓÓČEK 🔥</div>
-    <div class="finale-clock" id="fin-clock">18:00</div>
 
-    <div class="finale-scene" style="flex-direction:column;align-items:center;gap:16px">
-      <!-- Jan Š. figure -->
-      <div style="display:flex;align-items:center;gap:20px;width:100%">
-        <div id="jan-figure" style="flex-shrink:0">
-          <span class="jan-sleeping">😴</span>
-        </div>
+    <div class="finale-scene" style="flex-direction:column;align-items:center;gap:12px">
+
+      <!-- Řádek 1: hodiny vlevo + sleep bar vpravo -->
+      <div style="display:flex;align-items:center;gap:14px;width:100%">
+        <div class="finale-clock" id="fin-clock" style="font-size:clamp(22px,5vw,36px);flex-shrink:0;min-width:80px;text-align:left">18:00</div>
         <div style="flex:1">
-          <div class="sleep-bar-label" style="display:flex;justify-content:space-between;font-family:var(--font-pixel);font-size:8px;color:var(--clr-text-dim);margin-bottom:6px">
+          <div style="display:flex;justify-content:space-between;font-family:var(--font-pixel);font-size:8px;color:var(--clr-text-dim);margin-bottom:6px">
             <span>OSPALOST JANA Š.</span>
             <span id="fin-sleep-val">0%</span>
           </div>
           <div class="sleep-bar-track">
             <div class="sleep-bar-fill" id="fin-sleep-bar" style="width:0%;background:var(--clr-green)"></div>
           </div>
-          <div class="jan-speech" id="jan-speech" style="margin-top:10px;font-size:13px;color:var(--clr-text-dim);font-style:italic;line-height:1.5">
-            „Tak jo, grilovačka začíná! Cejtim čuníka!" 🐷
-          </div>
         </div>
       </div>
+
+      <!-- Řádek 2: obrázek Jana (menší, centrovaný) -->
+      <div id="jan-figure" style="text-align:center;width:100%">
+        <span class="jan-sleeping">😴</span>
+      </div>
+
+      <!-- Řádek 3: hláška pod obrázkem -->
+      <div class="jan-speech" id="jan-speech" style="text-align:center;width:100%;font-size:13px;color:var(--clr-text-dim);font-style:italic;line-height:1.5">
+        „Tak jo, grilovačka začíná! Cejtim čuníka!" 🐷
+      </div>
+
     </div>
 
     <div class="finale-items">
@@ -1269,7 +1275,7 @@ function updateJanFigure(sleep) {
   } else if (sleep > 31) {
     imgSrc = 'Pictures/Jan_02.png';
   }
-  fig.innerHTML = `<img src="${imgSrc}" alt="Jan" style="max-width:280px;height:auto;border-radius:12px;display:block">`;
+  fig.innerHTML = `<img src="${imgSrc}" alt="Jan" style="max-width:160px;height:auto;border-radius:10px;display:inline-block">`;
 }
 
 function useItem(itemId) {
