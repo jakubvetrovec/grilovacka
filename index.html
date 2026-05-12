@@ -465,6 +465,19 @@ Máš jasný úkol: navštívit všechny kamarády, kteří se na grilovačku ch
 <script src="audio.js"></script>
 <script src="minigames.js"></script>
 <script>
+// Prázdný AUDIO objekt - hudba byla odebrána
+window.AUDIO = {
+  SFX: {
+    click: () => {},
+    success: () => {},
+    fail: () => {},
+    item: () => {},
+    combo: () => {},
+    bgsong: () => {},
+    stop: () => {}
+  }
+};
+
 // ============================================================
 // PIXEL ART POSTAVIČKY
 // ============================================================
