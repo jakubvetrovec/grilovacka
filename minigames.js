@@ -1303,7 +1303,7 @@ const MINIGAMES = (() => {
     function startNewTask() {
       if (!running) return;
       taskStartTime = Date.now();
-      timeLeft = 3;
+      timeLeft = 5;
       currentTask = shuffleArray([...ingredients])[0];
       document.getElementById('task-display').innerHTML = `<span style="font-size:18px">Najdi: <strong>${currentTask.emoji} ${currentTask.name}</strong></span>`;
       document.getElementById('time-bar').style.width = '100%';
@@ -1359,8 +1359,8 @@ const MINIGAMES = (() => {
         return;
       }
       const elapsed = (Date.now() - taskStartTime) / 1000;
-      timeLeft = Math.max(0, 3 - elapsed);
-      const barWidth = (timeLeft / 3) * 100;
+      timeLeft = Math.max(0, 5 - elapsed);
+      const barWidth = (timeLeft / 5) * 100;
       document.getElementById('time-bar').style.width = barWidth + '%';
       document.getElementById('time-bar').style.background = timeLeft > 1 ? 'var(--clr-green)' : timeLeft > 0.5 ? '#f39c12' : 'var(--clr-red)';
 

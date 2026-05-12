@@ -1012,23 +1012,24 @@ function showMinigameConfirmation(loc, idx) {
   const gameType = loc.minigame;
 
   const descriptions = {
-    'pexeso': 'Hrajeme Pexeso! Najdi si páry stejných karet.',
-    'anagramy': 'Poskládej slova ze zmiksovaných písmen!',
-    'sudoku': 'Vyplň číslice tak, aby se neopakovala.',
-    'vlastovka': 'Griluj maso a dávej si pozor na čas!',
-    'svetylka': 'Pamatuj si, která světýlka svítí.',
-    'sibenice': 'Uhodni slovo - máš jen pár pokusů!',
-    'kviz': 'Odpověz správně na otázky.',
-    'natocpivo': 'Počítej, kolik si vylijete piva!',
-    'anglicaky': 'Klikej v zeleném pásmu, když se kurzor pohybuje! 10x zdvihni činku v správný čas.',
-    'hledejingredient': 'Najdi všechny ingredience na obrázku!',
+    'pexeso':           'najít páry stejných karet. Máš omezený počet tahů – používej je chytře!',
+    'anagramy':         'poskládat správné slovo ze zmiksovaných písmen.',
+    'sudoku':           'vyplnit číslice do mřížky tak, aby se na každém řádku neopakovala.',
+    'vlastovka':        'grilovat maso – klikni vždy, když se ukazatel pohybuje ve středním zeleném pásmu!',
+    'svetylka':         'zapamatovat si a zopakovat sekvenci rozsvícených světýlek.',
+    'sibenice':         'uhodnout tajné slovo po jednom písmenu – každý špatný tip tě přibližuje šibenici!',
+    'kviz':             'správně odpovědět na sérii otázek v časovém limitu.',
+    'natocpivo':        'načepovat pivo – zastav točení přesně ve chvíli, kdy je ukazatel v zeleném pásmu!',
+    'anglicaky':        '10× zdvihnout činku – klikni vždy, když se ukazatel pohybuje v zeleném pásmu!',
+    'hledejingredient': 'co nejrychleji najít zobrazenou ingredienci v řadě ostatních.',
   };
 
-  const desc = descriptions[gameType] || 'Zahraj si minihru!';
+  const desc = descriptions[gameType] || 'splnit minihru!';
 
   area.innerHTML = `
-    <div style="text-align:center;font-family:var(--font-pixel);font-size:13px;color:var(--clr-text);margin-bottom:16px;">
-      ${desc}
+    <div style="text-align:center;font-family:var(--font-body);font-size:12px;font-weight:400;color:var(--clr-text-dim);line-height:1.6;margin-bottom:16px;padding:0 6px;">
+      V následující minihře můžeš získat předmět pro Honzu.<br>
+      <span style="color:var(--clr-text);">Tvým úkolem bude: ${desc}</span>
     </div>
     <button class="btn btn-primary" id="btn-skip-minigame" style="width:100%;padding:10px;font-size:12px;">⏭ POKRAČOVAT DÁL</button>
   `;
