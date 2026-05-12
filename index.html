@@ -297,7 +297,7 @@
 <div id="screen-intro" class="screen active">
   <div class="intro-content">
     <div class="intro-glass-title">🔥 GRILOVAČKA 🔥</div>
-    <img src="Uvodni-obrazovka.png" alt="Grilovačka u Óóček" class="intro-pig-img">
+    <img src="Pictures/Uvodni-obrazovka.png" alt="Grilovačka u Óóček" class="intro-pig-img">
     <div class="intro-story">Rozdělovský Gang se chystá na grilovačku čuníka. Je tu ale jeden problém – Jan Š. (jméno není z důvodu GDPR uvedeno) má talent usnout na jakékoliv akci dřív, než se pořádně rozjede.
 <br><br>
 Letos to bude jinak! Ty jako jediný ho můžeš zachránit!
@@ -339,7 +339,7 @@ Máš jasný úkol: navštívit všechny kamarády, kteří se na grilovačku ch
   <div style="flex:1;overflow:hidden;position:relative;width:100%;min-height:0;display:flex;flex-direction:column;">
     <div class="pixel-map" id="pixel-map" style="flex:1;min-height:0;position:relative;">
       <!-- Nová mapa jako obrázek -->
-      <img id="map-img" src="Mapa_clean.png" alt="Mapa Rozdělov" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;object-position:center;display:block;pointer-events:none;background:#2a3820;">
+      <img id="map-img" src="Pictures/Mapa_clean.png" alt="Mapa Rozdělov" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;object-position:center;display:block;pointer-events:none;background:#2a3820;">
       <div class="map-pin-overlay" id="map-pins" style="position:absolute;inset:0;pointer-events:none;"></div>
       <!-- Popup s domem -->
       <div id="map-house-popup" style="display:none;position:absolute;z-index:100;"></div>
@@ -570,12 +570,12 @@ document.getElementById('btn-intro-start').addEventListener('click', () => {
 // ============================================================
 // Sprite sheet 4×2 grid, 1408×768px → každá postava 352×384px
 const AVATARS = [
-  { id:'f1', gender:'f', label:'Blondýnka',   emoji:'👩',  img:'Blondyna.png' },
-  { id:'f2', gender:'f', label:'Černovláska', emoji:'👩‍🦰', img:'Cernovlaska.png' },
-  { id:'f3', gender:'f', label:'Bruneta',     emoji:'👩‍🦱', img:'Bruneta.png' },
-  { id:'m1', gender:'m', label:'Plešoun',     emoji:'👨',  img:'Plesoun.png' },
-  { id:'m2', gender:'m', label:'Šedovlas',    emoji:'🧔',  img:'Sedovlas.png' },
-  { id:'m3', gender:'m', label:'Brunet',      emoji:'👨‍🦱', img:'Brunet.png' },
+  { id:'f1', gender:'f', label:'Blondýnka',   emoji:'👩',  img:'Pictures/Blondyna.png' },
+  { id:'f2', gender:'f', label:'Černovláska', emoji:'👩‍🦰', img:'Pictures/Cernovlaska.png' },
+  { id:'f3', gender:'f', label:'Bruneta',     emoji:'👩‍🦱', img:'Pictures/Bruneta.png' },
+  { id:'m1', gender:'m', label:'Plešoun',     emoji:'👨',  img:'Pictures/Plesoun.png' },
+  { id:'m2', gender:'m', label:'Šedovlas',    emoji:'🧔',  img:'Pictures/Sedovlas.png' },
+  { id:'m3', gender:'m', label:'Brunet',      emoji:'👨‍🦱', img:'Pictures/Brunet.png' },
 ];
 
 function renderCharSelect() {
@@ -637,7 +637,7 @@ const LOCATION_HOUSES = {
   'vetraci':   { img: 'Pictures/04_u-Vetraku.png', label: 'u Větráků' },
   'oocka':     { img: 'Pictures/05_u-Oocek.png',   label: 'u Óóček' },
   'franci':    { img: 'Pictures/06_u-Francu.png',  label: 'u Franců' },
-  'fisa':      { img: 'Pictures/07_u-Fisi.png',    label: 'u Dr. Fíší' },
+  'fisa':      { img: 'Pictures/07_u-Fisi.png',    label: 'u Dr. Fíši' },
   'kozlovna':  { img: 'Pictures/08_Kozlovna.png',  label: 'Kozlovna' },
   'posilovna': { img: 'Pictures/09_Posilovna.png', label: 'Posilovna 21' },
   'kostel':    { img: 'Pictures/10_Kostel.png',    label: 'Kostel' },
