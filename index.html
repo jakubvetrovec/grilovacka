@@ -652,10 +652,10 @@ const LOCATION_COORDS = {
   'vetraci':   { x:  8.0, y: 50.0 },
   'oocka':     { x: 18.0, y: 14.0 },
   'franci':    { x: 40.0, y: 52.0 },
-  'fisa':      { x: 48.0, y: 38.0 },
-  'kozlovna':  { x: 35.0, y: 85.0 },
-  'posilovna': { x: 72.0, y: 48.0 },
-  'kostel':    { x: 62.0, y: 70.0 },
+  'fisa':      { x: 48.0, y: 28.0 },
+  'kozlovna':  { x: 45.0, y: 85.0 },
+  'posilovna': { x: 80.0, y: 48.0 },
+  'kostel':    { x: 62.0, y: 80.0 },
 };
 
 let activePopupLocId = null;
@@ -747,12 +747,12 @@ function renderMap() {
       position:absolute;
       top:50%;left:50%;
       transform:translate(-50%,-50%);
-      width:32px;height:32px;
+      width:26px;height:26px;
       border-radius:50%;
       background:${done ? '#1e5c1e' : failed ? '#2a2a2a' : 'rgba(20,10,0,0.75)'};
       border:3px solid ${done ? '#4ade80' : failed ? '#555' : loc.color};
       display:flex;align-items:center;justify-content:center;
-      font-size:14px;
+      font-size:11px;
       box-shadow:0 3px 12px rgba(0,0,0,0.6);
       cursor:${failed ? 'not-allowed' : 'pointer'};
       pointer-events:all;
