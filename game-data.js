@@ -66,12 +66,12 @@ const GAME_DATA = {
       color: '#e8734a',
       bgColor: '#fff3ee',
       scenes: [
-        { type: 'image', src: '01_Sulc_01.png' },
+        { type: 'image', src: 'Pictures/01_Sulc_01.png' },
         { type: 'dialog' },
-        { type: 'image', src: '01_Sulc_02.png' },
-        { type: 'image', src: '01_Sulc_03.png' },
+        { type: 'image', src: 'Pictures/01_Sulc_02.png' },
+        { type: 'image', src: 'Pictures/01_Sulc_03.png' },
         { type: 'minigame' },
-        { type: 'image', src: '01_Sulc_04.png' },
+        { type: 'image', src: 'Pictures/01_Sulc_04.png' },
         { type: 'item' },
       ],
       dialog: {
@@ -99,11 +99,11 @@ const GAME_DATA = {
       color: '#4a90d9',
       bgColor: '#eef4ff',
       scenes: [
-        { type: 'image', src: '02_Vaca_01.png' },
+        { type: 'image', src: 'Pictures/02_Vaca_01.png' },
         { type: 'dialog' },
         { type: 'minigame' },
-        { type: 'image', src: '02_Vaca_02.png' },
-        { type: 'image', src: '02_Vaca_03.png' },
+        { type: 'image', src: 'Pictures/02_Vaca_02.png' },
+        { type: 'image', src: 'Pictures/02_Vaca_03.png' },
         { type: 'item' },
       ],
       dialog: {
@@ -131,11 +131,11 @@ const GAME_DATA = {
       color: '#2ecc71',
       bgColor: '#efffef',
       scenes: [
-        { type: 'image', src: '03_Krec_01.png' },
+        { type: 'image', src: 'Pictures/03_Krec_01.png' },
         { type: 'dialog' },
         { type: 'minigame' },
-        { type: 'image', src: '03_Krec_02.png' },
-        { type: 'image', src: '03_Krec_03.png' },
+        { type: 'image', src: 'Pictures/03_Krec_02.png' },
+        { type: 'image', src: 'Pictures/03_Krec_03.png' },
         { type: 'item' },
       ],
       dialog: {
@@ -163,12 +163,12 @@ const GAME_DATA = {
       color: '#9b59b6',
       bgColor: '#f5eeff',
       scenes: [
-        { type: 'image', src: '04_Vetrak_01.png' },
+        { type: 'image', src: 'Pictures/04_Vetrak_01.png' },
         { type: 'dialog' },
-        { type: 'image', src: '04_Vetrak_02.png' },
+        { type: 'image', src: 'Pictures/04_Vetrak_02.png' },
         { type: 'minigame' },
-        { type: 'image', src: '04_Vetrak_03.png' },
-        { type: 'image', src: '04_Vetrak_04.png' },
+        { type: 'image', src: 'Pictures/04_Vetrak_03.png' },
+        { type: 'image', src: 'Pictures/04_Vetrak_04.png' },
         { type: 'item' },
       ],
       dialog: {
