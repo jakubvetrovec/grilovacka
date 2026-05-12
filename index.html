@@ -524,6 +524,7 @@ const GS = {
   usedItems: [],
   completedLocations: new Set(),
   failedLocations: new Set(),
+  locAttempts: {},
   currentLocation: null,
   locSceneIdx: 0,
   dialogDone: false,
@@ -1030,19 +1031,10 @@ function showMinigameConfirmation(loc, idx) {
     <div style="text-align:center;font-family:var(--font-pixel);font-size:13px;color:var(--clr-text);margin-bottom:16px;">
       ${desc}
     </div>
-    <button class="btn btn-primary" id="btn-confirm-minigame" style="width:100%;padding:10px;font-size:14px;margin-bottom:8px;">🎮 ZAHRÁT SI MINIHRU</button>
-    <button class="btn btn-secondary" id="btn-skip-minigame" style="width:100%;padding:10px;font-size:12px;">⏭ POKRAČOVAT DAL</button>
+    <button class="btn btn-primary" id="btn-skip-minigame" style="width:100%;padding:10px;font-size:12px;">⏭ POKRAČOVAT DÁL</button>
   `;
 
-  const confirmBtn = document.getElementById('btn-confirm-minigame');
-  const skipBtn = document.getElementById('btn-skip-minigame');
-
-  confirmBtn.addEventListener('click', () => {
-    AUDIO.SFX.click();
-    openMinigame(loc);
-  });
-
-  skipBtn.addEventListener('click', () => {
+  document.getElementById('btn-skip-minigame').addEventListener('click', () => {
     AUDIO.SFX.click();
     advanceLocScene(loc, idx + 1);
   });
@@ -1179,8 +1171,13 @@ function onMinigameWin(loc) {
 }
 
 function onMinigameFail(loc) {
-  GS.failedLocations.add(loc.id);
-  toast('😢 Lokace se uzamkla. Zkus jinou!');
+  GS.locAttempts[loc.id] = (GS.locAttempts[loc.id] || 0) + 1;
+  if (GS.locAttempts[loc.id] >= 2) {
+    GS.failedLocations.add(loc.id);
+    toast('😢 Lokace se uzamkla. Zkus jinou!');
+  } else {
+    toast('😅 Nevyšlo to! Máš ještě jeden pokus.');
+  }
   showScreen('map');
   renderMap();
 }
@@ -1476,7 +1473,7 @@ document.getElementById('btn-share').addEventListener('click', async () => {
 
 document.getElementById('btn-replay').addEventListener('click', () => {
   AUDIO.SFX.click();
-  GS.inventory=[];GS.usedItems=[];GS.completedLocations=new Set();GS.failedLocations=new Set();
+  GS.inventory=[];GS.usedItems=[];GS.completedLocations=new Set();GS.failedLocations=new Set();GS.locAttempts={};
   GS.currentLocation=null;GS.dialogDone=false;GS.playerName='';GS.playerAvatar=null;
   clearInterval(GS.finaleInterval);GS.finaleRunning=false;
   AUDIO.playMenuMusic();
@@ -1513,6 +1510,7 @@ setInterval(() => {
       inventory:GS.inventory,
       completedLocations:[...GS.completedLocations],
       failedLocations:[...GS.failedLocations],
+      locAttempts:GS.locAttempts,
     }));
   } catch(e){}
 }, 5000);
