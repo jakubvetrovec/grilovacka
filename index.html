@@ -631,16 +631,16 @@ document.getElementById('btn-confirm-char').addEventListener('click', () => {
 
 // Mapování čísla lokace → soubor s domem a zobrazované jméno
 const LOCATION_HOUSES = {
-  'sulcovi':   { img: '01_u-Sulcu.png',   label: 'u Šulců' },
-  'vackovi':   { img: '02_u-Vacu.png',    label: 'u Váců' },
-  'krecovi':   { img: '03_u-Krecu.png',   label: 'u Krečů' },
-  'vetraci':   { img: '04_u-Vetraku.png', label: 'u Větráků' },
-  'oocka':     { img: '05_u-Oocek.png',   label: 'u Óóček' },
-  'franci':    { img: '06_u-Francu.png',  label: 'u Franců' },
-  'fisa':      { img: '07_u-Fisi.png',    label: 'u Dr. Fíši' },
-  'kozlovna':  { img: '08_Kozlovna.png',  label: 'Kozlovna' },
-  'posilovna': { img: '09_Posilovna.png', label: 'Posilovna 21' },
-  'kostel':    { img: '10_Kostel.png',    label: 'Kostel' },
+  'sulcovi':   { img: 'Pictures/01_u-Sulcu.png',   label: 'u Šulců' },
+  'vackovi':   { img: 'Pictures/02_u-Vacu.png',    label: 'u Váců' },
+  'krecovi':   { img: 'Pictures/03_u-Krecu.png',   label: 'u Krečů' },
+  'vetraci':   { img: 'Pictures/04_u-Vetraku.png', label: 'u Větráků' },
+  'oocka':     { img: 'Pictures/05_u-Oocek.png',   label: 'u Óóček' },
+  'franci':    { img: 'Pictures/06_u-Francu.png',  label: 'u Franců' },
+  'fisa':      { img: 'Pictures/07_u-Fisi.png',    label: 'u Dr. Fíší' },
+  'kozlovna':  { img: 'Pictures/08_Kozlovna.png',  label: 'Kozlovna' },
+  'posilovna': { img: 'Pictures/09_Posilovna.png', label: 'Posilovna 21' },
+  'kostel':    { img: 'Pictures/10_Kostel.png',    label: 'Kostel' },
 };
 
 // Přesné souřadnice pinů na mapě (% z rozměrů Mapa_clean.png 1400×934)
@@ -1253,15 +1253,15 @@ function resumeFinale() {
 
 function updateJanFigure(sleep) {
   const fig = document.getElementById('jan-figure');
-  let imgSrc = 'Jan_01.png';
+  let imgSrc = 'Pictures/Jan_01.png';
   if (sleep > 80) {
-    imgSrc = 'Jan_05.png';
+    imgSrc = 'Pictures/Jan_05.png';
   } else if (sleep > 66) {
-    imgSrc = 'Jan_04.png';
+    imgSrc = 'Pictures/Jan_04.png';
   } else if (sleep > 53) {
-    imgSrc = 'Jan_03.png';
+    imgSrc = 'Pictures/Jan_03.png';
   } else if (sleep > 31) {
-    imgSrc = 'Jan_02.png';
+    imgSrc = 'Pictures/Jan_02.png';
   }
   fig.innerHTML = `<img src="${imgSrc}" alt="Jan" style="max-width:280px;height:auto;border-radius:12px;display:block">`;
 }
