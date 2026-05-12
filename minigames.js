@@ -43,7 +43,7 @@ const MINIGAMES = (() => {
     const items = ['🐶','🐱','🐦','🦌','🐻','🦊','🥩','🌭','🍖','🔥','🍴','🧂'];
     const cards = [...items, ...items].sort(() => Math.random() - 0.5);
     let flipped = [], matched = [], locked = false, moves = 0, lastMatch = false, combo = 0;
-    const MAX_MOVES = 20;
+    const MAX_MOVES = 24;
 
     container.innerHTML = `
       <div class="minigame-header">
@@ -188,7 +188,7 @@ const MINIGAMES = (() => {
         </div>
         <div class="minigame-area" style="gap:18px;position:relative">
           <div style="font-size:12px;color:var(--clr-text-dim)">💡 <em>${wordObj.hint}</em></div>
-          <div style="font-family:var(--font-pixel);font-size:clamp(18px,4vw,28px);color:var(--clr-accent);letter-spacing:8px">${shuffled.split('').join(' ')}</div>
+          <div style="font-family:var(--font-pixel);font-size:clamp(12px,2vw,16px);color:var(--clr-accent);letter-spacing:2px;font-weight:500">${shuffled.split('').join(' ')}</div>
           <div style="font-size:11px;color:var(--clr-text-dim)">${wordObj.word.length} písmen</div>
           <input class="anagram-input" id="ana-input" type="text" placeholder="Tvůj tip..." maxlength="20" autocomplete="off" style="text-transform:uppercase">
           <button class="btn btn-primary" id="ana-submit">POTVRDIT ↵</button>
@@ -317,7 +317,7 @@ const MINIGAMES = (() => {
         const btn = document.createElement('div');
         btn.className = 'sudoku-num';
         btn.textContent = n;
-        btn.style.cssText = 'width:48px;height:48px;font-size:20px;font-weight:900;border-radius:6px;';
+        btn.style.cssText = 'width:32px;height:32px;font-size:14px;font-weight:900;border-radius:6px;';
         btn.addEventListener('click', () => {
           if (!selected) return;
           AUDIO.SFX.click();
@@ -329,7 +329,7 @@ const MINIGAMES = (() => {
       const clearBtn = document.createElement('div');
       clearBtn.className = 'sudoku-num';
       clearBtn.textContent = '✖';
-      clearBtn.style.cssText = 'width:48px;height:48px;font-size:24px;font-weight:900;border-radius:6px;background:#8b4513;color:#ff8c00;';
+      clearBtn.style.cssText = 'width:32px;height:32px;font-size:16px;font-weight:900;border-radius:6px;background:#8b4513;color:#ff8c00;';
       clearBtn.addEventListener('click', () => {
         if (!selected) return;
         AUDIO.SFX.click();
@@ -617,10 +617,10 @@ const MINIGAMES = (() => {
         if (attempts >= maxAttempts) {
           showResult(false, `Vyčerpal jsi 3 pokusy!\nJanek je smutný. 😢`); return;
         }
-        document.getElementById('sv-status').textContent = `❌ Chyba! Zbývá ${maxAttempts - attempts} pokus(ů). Opakuji...`;
-        sequence = []; round = 1; playerSeq = [];
+        document.getElementById('sv-status').textContent = `❌ Chyba! Zbývá ${maxAttempts - attempts} pokus(ů). Opakuji kolo ${round}...`;
+        playerSeq = [];
         updateInfo();
-        setTimeout(() => nextRound(), 1800);
+        setTimeout(() => playSequence(), 1800);
         return;
       }
       if (playerSeq.length === sequence.length) {
@@ -763,7 +763,7 @@ const MINIGAMES = (() => {
   function startKviz(container) {
     const questions = GAME_DATA.quizQuestions.slice().sort(() => Math.random() - 0.5);
     let qIdx = 0, correct = 0, wrong = 0;
-    let timeLeft = 10, timerInterval = null;
+    let timeLeft = 15, timerInterval = null;
 
     function renderQ() {
       if (qIdx >= 5) {
@@ -773,14 +773,14 @@ const MINIGAMES = (() => {
         return;
       }
 
-      timeLeft = 10;
+      timeLeft = 15;
       const q = questions[qIdx];
       const pct = ((qIdx) / 5) * 100;
 
       container.innerHTML = `
         <div class="minigame-header">
           <div class="minigame-title">🩺 ORDINACE DR. FÍŠE</div>
-          <div class="minigame-desc" style="font-family:var(--font-pixel);font-size:8px">Otázka ${qIdx+1}/5 | Chyby: ${wrong}/2 | Čas: <span id="quiz-timer">10</span>s</div>
+          <div class="minigame-desc" style="font-family:var(--font-pixel);font-size:8px">Otázka ${qIdx+1}/5 | Chyby: ${wrong}/2 | Čas: <span id="quiz-timer">15</span>s</div>
         </div>
         <div class="minigame-area" style="gap:12px;position:relative">
           <div style="flex:1;height:6px;background:#3d2000;border-radius:3px;overflow:hidden">
@@ -829,7 +829,7 @@ const MINIGAMES = (() => {
             document.getElementById('quiz-fb').style.color='#ff4d6d';
             document.getElementById('quiz-fb').innerHTML=`❌ Špatně!<div style="font-size:11px;margin-top:6px;font-weight:400">${q.explanation}</div>`;
           }
-          setTimeout(() => { qIdx++; renderQ(); }, 1800);
+          setTimeout(() => { qIdx++; renderQ(); }, 4000);
         });
         opts.appendChild(btn);
       });
@@ -843,8 +843,8 @@ const MINIGAMES = (() => {
   function startNatocPivo(container) {
     container.innerHTML = `
       <div class="minigame-header">
-        <div class="minigame-title">🍖 CHYTEJ MASO!</div>
-        <div class="minigame-desc">Chytej kousky masa! Max 5 kouků může spadnout. ← → pohyb</div>
+        <div class="minigame-title">🍺 CHYTEJ PIVO!</div>
+        <div class="minigame-desc">Načepuj dokonalé pivo! Max 5 kapek může přijít nazmar. ← → pohyb</div>
       </div>
       <div class="minigame-area" style="padding:8px;gap:10px;position:relative">
         <canvas id="pivo-canvas" width="440" height="300" style="max-width:100%;border-radius:12px"></canvas>
@@ -921,7 +921,7 @@ const MINIGAMES = (() => {
             score++;
             document.getElementById('piv-score').textContent = score;
             AUDIO.SFX.tick();
-            if (score >= 20) { running = false; setTimeout(() => showResult(true, `VYPEČENÉ MASO! 🍖\nChytil jsi 20 kusů!\nMaso je dokonalé!`), 200); }
+            if (score >= 20) { running = false; setTimeout(() => showResult(true, `KRÁSNĚ OROSENÝ PŮLITR! 🍺\nJe vidět, že si s pípou rozumíš!\nTak na zdraví!`), 200); }
           } else if (d.y > H + 10 && !d.caught) {
             d.done = true; missed++;
             document.getElementById('piv-miss').textContent = missed;
@@ -1372,7 +1372,13 @@ const MINIGAMES = (() => {
     let lastTime = null;
     // Oscillating marker
     let markerX = 0, markerDir = 1, markerSpeed = 220;
-    const GREEN_START = W*0.38, GREEN_END = W*0.62;
+    const getGreenZone = () => {
+      const shrinkFactor = Math.max(0.8, 1 - score * 0.06);
+      const zoneWidth = W * 0.24 * shrinkFactor;
+      const zoneCenter = W * 0.5;
+      return { start: zoneCenter - zoneWidth / 2, end: zoneCenter + zoneWidth / 2 };
+    };
+    let GREEN_START = W*0.38, GREEN_END = W*0.62;
     const BAR_Y = H-50, BAR_H = 30;
     let barbellY = H*0.45, targetY = H*0.45;
     let lifting = false, liftTimer = 0;
@@ -1381,7 +1387,8 @@ const MINIGAMES = (() => {
 
     function tap() {
       if (!running) return;
-      const inGreen = markerX >= GREEN_START && markerX <= GREEN_END;
+      const zone = getGreenZone();
+      const inGreen = markerX >= zone.start && markerX <= zone.end;
       if (inGreen) {
         AUDIO.SFX.success(); score++;
         document.getElementById('vz-score').textContent = score;
@@ -1406,6 +1413,11 @@ const MINIGAMES = (() => {
       markerX += markerDir * markerSpeed * dt;
       if (markerX > W-10) { markerX = W-10; markerDir = -1; }
       if (markerX < 10) { markerX = 10; markerDir = 1; }
+
+      // Update green zone based on score
+      const zone = getGreenZone();
+      GREEN_START = zone.start;
+      GREEN_END = zone.end;
 
       // Lift animation
       if (lifting) {

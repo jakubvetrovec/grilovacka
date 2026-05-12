@@ -300,11 +300,11 @@
     <img src="Uvodni-obrazovka.png" alt="Grilovačka u Óóček" class="intro-pig-img">
     <div class="intro-story">Rozdělovský Gang se chystá na grilovačku čuníka. Je tu ale jeden problém – Jan Š. (jméno není z důvodu GDPR uvedeno) má talent usnout na jakékoliv akci dřív, než se pořádně rozjede.
 <br><br>
-Letos to bude jinak! A právě ty jako jediný ho můžeš zachránit!
+Letos to bude jinak! Ty jako jediný ho můžeš zachránit!
 <br><br>
-Máš jasný úkol: navštívit všechny kamarády (v libovolném pořadí), kteří se na grilovačku chystají, zjistit co by Janovi Š. mohlo pomoci a získat předměty, které ho udrží vzhůru, a večer mu je správně dávkovat...
+Máš jasný úkol: navštívit všechny kamarády, kteří se na grilovačku chystají, zjistit co by Janovi Š. mohlo pomoci a získat předměty, které ho udrží vzhůru, a večer mu je správně dávkovat...
 <br><br>
-Čím déle vydrží nespat, tím větší legenda z tebe bude! 🔥</div>
+Čím déle vydrží, tím větší legenda z tebe bude! 🔥</div>
     <button class="btn btn-primary" id="btn-intro-start" style="margin:4px 0 0;font-size:clamp(10px,2vw,15px);">
       🐷 CHCI MU POMOCI!
     </button>
@@ -334,7 +334,7 @@ Máš jasný úkol: navštívit všechny kamarády (v libovolném pořadí), kte
       </div>
     </div>
     <div class="map-inventory-bar" id="map-inventory"></div>
-    <button class="btn btn-secondary btn-sm" id="btn-to-finale" style="display:none">🔥 GRILOVAČKA!</button>
+    <button class="btn btn-secondary btn-sm" id="btn-to-finale" style="display:none;animation:finalePulse 1s infinite">🔥 GRILOVAČKA!</button>
   </div>
   <div style="flex:1;overflow:hidden;position:relative;width:100%;min-height:0;display:flex;flex-direction:column;">
     <div class="pixel-map" id="pixel-map" style="flex:1;min-height:0;position:relative;">
@@ -429,7 +429,7 @@ Máš jasný úkol: navštívit všechny kamarády (v libovolném pořadí), kte
 
     <!-- Vtipná hláška -->
     <div id="res-funny-quote" style="font-size:16px;font-style:italic;text-align:center;color:var(--clr-text-dim);padding:12px;border-left:3px solid var(--clr-accent)">
-      "Jan se slunečku usmívá a chrapá jako traktůrek..."
+      "Jan se v postýlce usmívá a chrápe jako traktůrek..."
     </div>
 
     <!-- Hráčský info -->
@@ -643,7 +643,7 @@ const LOCATION_COORDS = {
   'fisa':      { x: 48.0, y: 38.0 },
   'kozlovna':  { x: 35.0, y: 85.0 },
   'posilovna': { x: 72.0, y: 48.0 },
-  'kostel':    { x: 62.0, y: 62.0 },
+  'kostel':    { x: 62.0, y: 70.0 },
 };
 
 let activePopupLocId = null;
@@ -735,12 +735,12 @@ function renderMap() {
       position:absolute;
       top:50%;left:50%;
       transform:translate(-50%,-50%);
-      width:40px;height:40px;
+      width:32px;height:32px;
       border-radius:50%;
       background:${done ? '#1e5c1e' : failed ? '#2a2a2a' : 'rgba(20,10,0,0.75)'};
       border:3px solid ${done ? '#4ade80' : failed ? '#555' : loc.color};
       display:flex;align-items:center;justify-content:center;
-      font-size:18px;
+      font-size:14px;
       box-shadow:0 3px 12px rgba(0,0,0,0.6);
       cursor:${failed ? 'not-allowed' : 'pointer'};
       pointer-events:all;
@@ -929,14 +929,19 @@ function showLocImage(loc, src, idx) {
 
   panel.style.display = 'block';
   img.src = src;
-  area.innerHTML = '';
+  area.innerHTML = `
+    <button class="btn btn-secondary" id="btn-continue-loc" style="width:auto;padding:6px 12px;margin-top:8px;font-size:9px;font-weight:400;">⏭ POKRAČOVAT</button>
+  `;
 
   // Tap/click na panel = pokračovat
-  panel.onclick = null;
-  panel.onclick = () => {
+  const continueBtn = document.getElementById('btn-continue-loc');
+  const handleContinue = () => {
     AUDIO.SFX.click();
     advanceLocScene(loc, idx + 1);
   };
+  continueBtn.addEventListener('click', handleContinue);
+  panel.onclick = null;
+  panel.onclick = handleContinue;
 }
 
 function showLocDialog(loc, idx) {
@@ -1205,15 +1210,17 @@ function resumeFinale() {
 
 function updateJanFigure(sleep) {
   const fig = document.getElementById('jan-figure');
-  if (sleep >= 80) {
-    fig.innerHTML = `<span class="jan-sleeping">😴</span>`;
-  } else if (sleep >= 50) {
-    fig.innerHTML = `<span class="jan-sleeping" style="animation-duration:3s">😪</span>`;
-  } else if (sleep >= 30) {
-    fig.innerHTML = `<span style="font-size:clamp(60px,12vw,100px);display:block;text-align:center">😑</span>`;
-  } else {
-    fig.innerHTML = `<span class="jan-awake">😄</span>`;
+  let imgSrc = 'Jan_01.png';
+  if (sleep > 80) {
+    imgSrc = 'Jan_05.png';
+  } else if (sleep > 66) {
+    imgSrc = 'Jan_04.png';
+  } else if (sleep > 53) {
+    imgSrc = 'Jan_03.png';
+  } else if (sleep > 31) {
+    imgSrc = 'Jan_02.png';
   }
+  fig.innerHTML = `<img src="${imgSrc}" alt="Jan" style="max-width:280px;height:auto;border-radius:12px;display:block">`;
 }
 
 function useItem(itemId) {
@@ -1280,7 +1287,7 @@ function showComboFlash(msg) {
   el.className = 'combo-flash';
   el.textContent = msg;
   document.body.appendChild(el);
-  setTimeout(() => el.remove(), 2200);
+  setTimeout(() => el.remove(), 4000);
 }
 
 function renderFinaleItems() {
@@ -1338,16 +1345,14 @@ function endFinale(survived) {
     desc=`Jan Š. vydržel do ${timeStr}. Příště zkus lepší kombinaci!`;
   } else {
     rank='🥉'; title='PŘÍŠTĚ LÉPE...';
-    desc=`Jan Š. usnul v ${timeStr}. Garp ho olizoval, ale nepomohlo. 🐕`;
+    desc=`Jan Š. usnul v ${timeStr}. Garp ho olizoval, ale nepomohlo to. 🐕`;
   }
 
   // Vtipné hlášky když Jan usne
   const funnyQuotes = [
-    '"Jan se slunečku usmívá a chrapá jako traktůrek..."',
-    '"Honza konečně sní svojí legendu... v očích." 😴',
-    '"Vítězství! Jan usul během hymny Rozdělovského gangu!" 🏳️',
-    '"Chrapot echem zní halou. Garp se těší na večeři..." 🐕',
-    '"Grilovačka pokračuje bez průvodce. Jan si sní o V70 dieselu..." 🚗'
+    '"Jan se usmívá jako měsíček na hnoji a chrápe jako traktor..."',
+    '"Tak jak dneska? Na hodináře? Nebo na hvězdáře..?" 😴',
+    '"Grilovačka pokračuje bez průvodce. Jan si sní o novém V70 dieselu..." 🚗'
   ];
   const randomQuote = funnyQuotes[Math.floor(Math.random() * funnyQuotes.length)];
 
