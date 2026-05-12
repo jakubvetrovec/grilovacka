@@ -691,7 +691,7 @@ const MINIGAMES = (() => {
   // ===========================================================
   function startSibenice(container) {
     const wordList = GAME_DATA.hangmanWords.slice().sort(() => Math.random() - 0.5).slice(0, 5);
-    let wordIdx = 0, correct = 0, maxErrors = 6, showHint = false;
+    let wordIdx = 0, correct = 0, maxErrors = 3, showHint = false;
 
     function renderWord() {
       const wordObj = wordList[wordIdx];
@@ -712,7 +712,7 @@ const MINIGAMES = (() => {
       }
 
       function rerender() {
-        const figs = ['🙂','😐','😟','😨','😱','💀','☠️'];
+        const figs = ['🙂','😟','😱','☠️'];
         const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ';
         container.innerHTML = `
           <div class="minigame-header">
