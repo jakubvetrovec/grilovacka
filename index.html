@@ -1374,7 +1374,22 @@ function useItem(itemId) {
 
   renderFinaleItems();
   updateFinaleUI();
-  setTimeout(() => { if (GS.sleepLevel < 80) resumeFinale(); else pauseFinale(); }, 1500);
+  setTimeout(() => {
+    const availItems = GS.inventory.filter(id => !GS.usedItems.includes(id));
+    if (availItems.length === 0) {
+      // Všechny předměty použity — doběhni bar na 100 % a ukonči hru
+      GS.sleepLevel = 100;
+      updateJanFigure(100);
+      updateFinaleUI();
+      setTimeout(() => endFinale(false), 800);
+    } else if (GS.sleepLevel < 80) {
+      resumeFinale();
+    } else {
+      // Ospalost stále na/nad 80 % ale předměty zbývají — force re-pause
+      GS.finaleRunning = true;
+      pauseFinale();
+    }
+  }, 1500);
 }
 
 function showComboFlash(msg) {
