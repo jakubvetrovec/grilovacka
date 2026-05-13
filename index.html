@@ -382,7 +382,31 @@ Máš jasný úkol: navštívit všechny kamarády, kteří se na grilovačku ch
 </div>
 
 <!-- ============================================================
-     SCREEN 5: FINALE
+     SCREEN 5: FINALE INTRO
+     ============================================================ -->
+<div id="screen-finale-intro" class="screen" style="justify-content:flex-start;align-items:stretch;">
+  <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:16px 20px 24px;gap:14px;">
+    <div style="font-family:var(--font-pixel);font-size:14px;color:var(--clr-accent);text-align:center;letter-spacing:2px;padding-top:4px;">🔥 GRILOVAČKA! 🔥</div>
+
+    <img src="Pictures/Jan_00.png" alt="Jan" style="max-height:200px;max-width:160px;width:auto;height:auto;border-radius:10px;display:block;margin:0 auto;">
+
+    <div style="font-family:var(--font-body);font-size:12px;color:var(--clr-text);line-height:1.75;max-width:360px;text-align:left;background:rgba(255,255,255,0.04);border:1px solid var(--clr-border);border-radius:10px;padding:14px 16px;">
+      <div style="font-family:var(--font-pixel);font-size:9px;color:var(--clr-accent);margin-bottom:8px;letter-spacing:1px;">JAK TO FUNGUJE</div>
+      <p style="margin:0 0 8px">Honza Šulc se po celém dni grilování a dobré zábavy začíná nebezpečně <strong>usnávat</strong>. Tvým úkolem je udržet ho vzhůru co nejdéle.</p>
+      <p style="margin:0 0 8px">⏱️ <strong>Čas plyne</strong> – hodiny tikají od 18:00 a <strong>status bar ospalosti</strong> se neustále plní.</p>
+      <p style="margin:0 0 8px">🛑 Jakmile ospalost dosáhne <strong>80 %</strong>, čas se zastaví a můžeš použít jeden z předmětů, které jsi během dne posbíral.</p>
+      <p style="margin:0 0 8px">🎁 Každý předmět sníží Honzovu ospalost – ale pozor, záleží na <strong>pořadí použití</strong>. Správná kombinace za sebou ti dá <strong>COMBO BONUS</strong> a srazí ospalost víc!</p>
+      <p style="margin:0">🏁 Hra končí, jakmile jsou použity všechny předměty. Čím déle udržíš Honzu vzhůru, tím lépe!</p>
+    </div>
+
+    <button class="btn btn-primary" id="btn-start-finale" style="width:100%;max-width:360px;padding:14px;font-size:12px;margin-top:4px;letter-spacing:1px;">
+      🔥 Zachráním večer – udržím Honzu vzhůru!
+    </button>
+  </div>
+</div>
+
+<!-- ============================================================
+     SCREEN 6: FINALE
      ============================================================ -->
 <div id="screen-finale" class="screen">
   <div class="finale-wrapper">
@@ -1214,6 +1238,11 @@ document.getElementById('btn-back-loc').addEventListener('click', () => {
 // FINALE
 // ============================================================
 document.getElementById('btn-to-finale').addEventListener('click', () => {
+  AUDIO.SFX.click();
+  showScreen('finale-intro');
+});
+
+document.getElementById('btn-start-finale').addEventListener('click', () => {
   AUDIO.SFX.click();
   AUDIO.playFinaleMusic();
   startFinale();
