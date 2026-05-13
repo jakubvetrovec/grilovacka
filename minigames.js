@@ -580,7 +580,7 @@ const MINIGAMES = (() => {
     ];
     const totalRounds = 6, maxAttempts = 3;
     let sequence = [], playerSeq = [], round = 1, canClick = false;
-    let attempts = 0, startLen = 2, errorRound = 0;
+    let attempts = 0, startLen = 1, errorRound = 0;
 
     container.innerHTML = `
       <div class="minigame-header">
@@ -710,12 +710,12 @@ const MINIGAMES = (() => {
       return a;
     }
     const wordList = shuffleArr(GAME_DATA.hangmanWords).slice(0, 5);
-    let wordIdx = 0, correct = 0, maxErrors = 5, showHint = false;
+    let wordIdx = 0, correct = 0, maxErrors = 7, showHint = false;
 
     function renderWord() {
       const wordObj = wordList[wordIdx];
       if (!wordObj) {
-        if (correct >= 4) showResult(true, `VÝBORNĚ!\nUhodl jsi ${correct}/5 slov!\nJarda nabízí drink! ⛳`);
+        if (correct >= 3) showResult(true, `VÝBORNĚ!\nUhodl jsi ${correct}/5 slov!\nJarda nabízí drink! ⛳`);
         else showResult(false, `Bohužel...\n${correct}/5 slov.\nJarda kroutí hlavou.`);
         return;
       }
@@ -731,7 +731,7 @@ const MINIGAMES = (() => {
       }
 
       function rerender() {
-        const figs = ['🙂','😐','😟','😨','😱','☠️'];
+        const figs = ['🙂','😐','😟','😨','😰','😱','💀','☠️'];
         const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ';
         container.innerHTML = `
           <div class="minigame-header">
@@ -1338,14 +1338,14 @@ const MINIGAMES = (() => {
     function startNewTask() {
       if (!running) return;
       taskStartTime = Date.now();
-      timeLeft = 5;
+      timeLeft = 4;
       currentTask = shuffleArray([...ingredients])[0];
       document.getElementById('task-display').innerHTML = `
         <div style="font-size:68px;line-height:1">${currentTask.emoji}</div>
         <div style="font-family:var(--font-pixel);font-size:9px;color:var(--clr-text-dim);margin-top:4px;letter-spacing:1px">NAJDI: <span style="color:var(--clr-accent)">${currentTask.name.toUpperCase()}</span></div>
       `;
       document.getElementById('time-bar').style.width = '100%';
-      document.getElementById('time-counter').textContent = '5';
+      document.getElementById('time-counter').textContent = '4';
     }
 
     function handleClick(e) {
@@ -1398,9 +1398,9 @@ const MINIGAMES = (() => {
         return;
       }
       const elapsed = (Date.now() - taskStartTime) / 1000;
-      timeLeft = Math.max(0, 5 - elapsed);
-      const barWidth = (timeLeft / 5) * 100;
-      const barColor = timeLeft > 2 ? 'var(--clr-green)' : timeLeft > 1 ? '#f39c12' : 'var(--clr-red)';
+      timeLeft = Math.max(0, 4 - elapsed);
+      const barWidth = (timeLeft / 4) * 100;
+      const barColor = timeLeft > 1.5 ? 'var(--clr-green)' : timeLeft > 0.8 ? '#f39c12' : 'var(--clr-red)';
       document.getElementById('time-bar').style.width = barWidth + '%';
       document.getElementById('time-bar').style.background = barColor;
       const counter = document.getElementById('time-counter');
