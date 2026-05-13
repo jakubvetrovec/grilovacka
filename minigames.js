@@ -37,13 +37,13 @@ const MINIGAMES = (() => {
   function confirmFail() { if (onFail) { const cb = onFail; onFail = null; cb(); } }
 
   // ===========================================================
-  // 1. PEXESO – max 24 tahů, odpočítávání
+  // 1. PEXESO – max 25 tahů, odpočítávání
   // ===========================================================
   function startPexeso(container) {
     const items = ['🐶','🐱','🐦','🦌','🐻','🦊','🥩','🌭','🍖','🔥','🍴','🧂'];
     const cards = [...items, ...items].sort(() => Math.random() - 0.5);
     let flipped = [], matched = [], locked = false, moves = 0, lastMatch = false, combo = 0;
-    const MAX_MOVES = 24;
+    const MAX_MOVES = 25;
 
     container.innerHTML = `
       <div class="minigame-header">
