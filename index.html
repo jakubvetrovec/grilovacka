@@ -292,9 +292,12 @@
 </head>
 <body>
 
-<!-- Easter Egg popup -->
-<div id="easter-egg-bianchi" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;cursor:pointer;display:none;">
+<!-- Easter Egg popups -->
+<div id="easter-egg-bianchi" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;cursor:pointer;">
   <img src="Pictures/Bianchi.png" alt="Bianchi" style="max-width:90%;max-height:90%;border-radius:12px;box-shadow:0 0 40px rgba(255,200,0,0.5);animation:eggPop 0.3s ease-out;">
+</div>
+<div id="easter-egg-nikolka" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;cursor:pointer;">
+  <img src="Pictures/Svaly.png" alt="Nikolka" style="max-width:90%;max-height:90%;border-radius:12px;box-shadow:0 0 40px rgba(255,200,0,0.5);animation:eggPop 0.3s ease-out;">
 </div>
 
 <!-- ============================================================
@@ -657,8 +660,10 @@ document.getElementById('player-name').addEventListener('input', () => {
   checkCharReady();
   const val = document.getElementById('player-name').value.trim().toLowerCase();
   if (val === 'bianchi') {
-    const egg = document.getElementById('easter-egg-bianchi');
-    egg.style.display = 'flex';
+    document.getElementById('easter-egg-bianchi').style.display = 'flex';
+  }
+  if (val === 'nikolka') {
+    document.getElementById('easter-egg-nikolka').style.display = 'flex';
   }
 });
 function checkCharReady() {
@@ -668,6 +673,9 @@ function checkCharReady() {
 }
 document.getElementById('easter-egg-bianchi').addEventListener('click', () => {
   document.getElementById('easter-egg-bianchi').style.display = 'none';
+});
+document.getElementById('easter-egg-nikolka').addEventListener('click', () => {
+  document.getElementById('easter-egg-nikolka').style.display = 'none';
 });
 document.getElementById('btn-confirm-char').addEventListener('click', () => {
   GS.playerName = document.getElementById('player-name').value.trim();
