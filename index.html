@@ -406,7 +406,8 @@ Máš jasný úkol: navštívit všechny kamarády, kteří se na grilovačku ch
 
       <!-- Řádek 2: obrázek Jana (menší, centrovaný) -->
       <div id="jan-figure" style="text-align:center;width:100%">
-        <span class="jan-sleeping">😴</span>
+        <img id="jan-img" src="Pictures/Jan_01.png" alt="Jan"
+          style="max-height:200px;max-width:160px;width:auto;height:auto;border-radius:10px;display:inline-block;transition:opacity 0.4s ease;">
       </div>
 
       <!-- Řádek 3: hláška pod obrázkem -->
@@ -1226,6 +1227,10 @@ function startFinale() {
   GS.lastItemUsed = null;
   GS.comboLog = [];
   GS.finaleRunning = true;
+
+  // Preload all Jan images to prevent flicker on first change
+  ['Jan_01','Jan_02','Jan_03','Jan_04','Jan_05'].forEach(n => { const i = new Image(); i.src = `Pictures/${n}.png`; });
+
   renderFinaleItems();
   updateFinaleUI();
 
@@ -1270,18 +1275,17 @@ function resumeFinale() {
 }
 
 function updateJanFigure(sleep) {
-  const fig = document.getElementById('jan-figure');
   let imgSrc = 'Pictures/Jan_01.png';
-  if (sleep > 80) {
-    imgSrc = 'Pictures/Jan_05.png';
-  } else if (sleep > 66) {
-    imgSrc = 'Pictures/Jan_04.png';
-  } else if (sleep > 53) {
-    imgSrc = 'Pictures/Jan_03.png';
-  } else if (sleep > 31) {
-    imgSrc = 'Pictures/Jan_02.png';
-  }
-  fig.innerHTML = `<img src="${imgSrc}" alt="Jan" style="max-width:160px;height:auto;border-radius:10px;display:inline-block">`;
+  if (sleep > 80)      imgSrc = 'Pictures/Jan_05.png';
+  else if (sleep > 66) imgSrc = 'Pictures/Jan_04.png';
+  else if (sleep > 53) imgSrc = 'Pictures/Jan_03.png';
+  else if (sleep > 31) imgSrc = 'Pictures/Jan_02.png';
+
+  const img = document.getElementById('jan-img');
+  if (!img || img.getAttribute('src') === imgSrc) return;
+
+  img.style.opacity = '0';
+  setTimeout(() => { img.src = imgSrc; img.style.opacity = '1'; }, 220);
 }
 
 function useItem(itemId) {
