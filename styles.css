@@ -957,6 +957,12 @@ html, body {
   100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
 }
 
+@keyframes eggPop {
+  0%   { transform: scale(0.5); opacity: 0; }
+  70%  { transform: scale(1.06); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--clr-surface); }
