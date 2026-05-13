@@ -1283,17 +1283,28 @@ const MINIGAMES = (() => {
     container.innerHTML = `
       <div class="minigame-header">
         <div class="minigame-title">🔍 HLEDEJ INGREDIENCI!</div>
-        <div class="minigame-desc" id="task-display" style="min-height:20px;color:var(--clr-accent);font-size:14px">Čekám...</div>
-      </div>
-      <div class="minigame-area" style="flex-direction:column;gap:12px;position:relative">
-        <div style="position:relative;height:8px;background:var(--clr-surface2);border-radius:4px;overflow:hidden">
-          <div id="time-bar" style="height:100%;background:var(--clr-green);width:100%;border-radius:4px;transition:width 0.05s linear"></div>
+        <div class="minigame-desc" style="font-family:var(--font-pixel);font-size:8px;color:var(--clr-text-dim)">
+          Správně: <span id="score-display" style="color:var(--clr-green)">0</span> / 8 &nbsp;|&nbsp; Chyby: <span id="fail-display" style="color:var(--clr-red)">0</span> / 3
         </div>
+      </div>
+      <div class="minigame-area" style="flex-direction:column;gap:10px;position:relative">
+
+        <!-- Velký zobrazovač hledané ingredience -->
+        <div id="task-display" style="text-align:center;padding:8px 0 4px;min-height:90px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px">
+          <span style="font-size:12px;font-family:var(--font-pixel);color:var(--clr-text-dim)">Čekám...</span>
+        </div>
+
+        <!-- Odpočet: číselný + barevný bar -->
+        <div style="display:flex;align-items:center;gap:10px;width:100%">
+          <div style="flex:1;position:relative;height:10px;background:var(--clr-surface2);border-radius:5px;overflow:hidden">
+            <div id="time-bar" style="height:100%;background:var(--clr-green);width:100%;border-radius:5px;transition:width 0.05s linear"></div>
+          </div>
+          <div id="time-counter" style="font-family:var(--font-pixel);font-size:18px;color:var(--clr-green);min-width:24px;text-align:right;line-height:1">5</div>
+        </div>
+
+        <!-- Mřížka ingrediencí -->
         <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;padding:12px;background:rgba(0,0,0,0.2);border-radius:8px">
           ${ingredients.map((ing,i) => `<div class="ing-item" data-idx="${i}" style="font-size:32px;text-align:center;cursor:pointer;padding:8px;border-radius:6px;background:var(--clr-surface);transition:all 0.2s;user-select:none">${ing.emoji}</div>`).join('')}
-        </div>
-        <div style="font-family:var(--font-pixel);font-size:10px;text-align:center;color:var(--clr-text-dim)">
-          Správně: <span id="score-display" style="color:var(--clr-green)">0</span> / 8 &nbsp;|&nbsp; Chyby: <span id="fail-display" style="color:var(--clr-red)">0</span> / 3
         </div>
       </div>
     `;
@@ -1310,8 +1321,12 @@ const MINIGAMES = (() => {
       taskStartTime = Date.now();
       timeLeft = 5;
       currentTask = shuffleArray([...ingredients])[0];
-      document.getElementById('task-display').innerHTML = `<span style="font-size:18px">Najdi: <strong>${currentTask.emoji} ${currentTask.name}</strong></span>`;
+      document.getElementById('task-display').innerHTML = `
+        <div style="font-size:68px;line-height:1">${currentTask.emoji}</div>
+        <div style="font-family:var(--font-pixel);font-size:9px;color:var(--clr-text-dim);margin-top:4px;letter-spacing:1px">NAJDI: <span style="color:var(--clr-accent)">${currentTask.name.toUpperCase()}</span></div>
+      `;
       document.getElementById('time-bar').style.width = '100%';
+      document.getElementById('time-counter').textContent = '5';
     }
 
     function handleClick(e) {
@@ -1366,8 +1381,11 @@ const MINIGAMES = (() => {
       const elapsed = (Date.now() - taskStartTime) / 1000;
       timeLeft = Math.max(0, 5 - elapsed);
       const barWidth = (timeLeft / 5) * 100;
+      const barColor = timeLeft > 2 ? 'var(--clr-green)' : timeLeft > 1 ? '#f39c12' : 'var(--clr-red)';
       document.getElementById('time-bar').style.width = barWidth + '%';
-      document.getElementById('time-bar').style.background = timeLeft > 1 ? 'var(--clr-green)' : timeLeft > 0.5 ? '#f39c12' : 'var(--clr-red)';
+      document.getElementById('time-bar').style.background = barColor;
+      const counter = document.getElementById('time-counter');
+      if (counter) { counter.textContent = Math.ceil(timeLeft); counter.style.color = barColor; }
 
       if (timeLeft <= 0) {
         AUDIO.SFX.fail();
