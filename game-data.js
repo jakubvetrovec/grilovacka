@@ -573,6 +573,48 @@ const GAME_DATA = {
       correct: 0,
       explanation: 'Lodě SpaceX se jmenují po I Still Love You z kulturních referencí!',
     },
+    {
+      q: 'Co se stane, když pavouk splétá pavučinu pod vlivem kofeinu?',
+      options: ['Splétá ji 3× rychleji, ale zapomene kde začal', 'Vytvoří tu nejchaotictnější a nejméně funkční pavučinu ze všech testovaných látek', 'Začne si budovat startup a shání investory'],
+      correct: 1,
+      explanation: 'NASA testovala pavouky na různých látkách – kofein byl ze všech nejhorší!',
+    },
+    {
+      q: 'Kolik hodin denně spí kočka?',
+      options: ['8 hodin, stejně jako její majitel v nejlepším případě', '12 hodin – přesně polovinu života', 'Až 16 hodin – kočky jsou profesionální spáči'],
+      correct: 2,
+      explanation: 'Kočky prospí až 70 % svého života. Jan Šulc má co dohánět.',
+    },
+    {
+      q: 'Co si objednal poslední zákazník v jediné zbývající pobočce Blockbusteru v Oregonu?',
+      options: ['VHS kazetu Titaniku a oběd pro jednoho', 'Předplatné Netflixu – prý jako vtip', 'Blockbuster nevaří – jde o videopůjčovnu, ne restauraci'],
+      correct: 2,
+      explanation: 'Jediná zbývající pobočka Blockbusteru na světě je v Oregonu a funguje dodnes!',
+    },
+    {
+      q: 'Jak se jmenuje fobie ze strachu, že si zapomenete telefon doma?',
+      options: ['Smartphobofrénie', 'Digitální separační syndrom', 'Nomofóbie (No-Mobile-Phone-phobia)'],
+      correct: 2,
+      explanation: 'Nomofóbie je uznávaný psychologický jev. 66 % lidí ji prý má.',
+    },
+    {
+      q: 'Co bylo technicky první věcí, která byla kdy koupena přes internet?',
+      options: ['Kniha – Jeff Bezos to naplánoval roky dopředu', 'Pizza – protože internet je hlavně pro jídlo', 'Marihuana – studenti Stanfordu ji koupili od MIT v roce 1971'],
+      correct: 2,
+      explanation: 'Technicky první online transakce byl nelegální obchod ještě před vznikem moderního internetu.',
+    },
+    {
+      q: 'Proč se pizza s ananasem jmenuje hawaiian, když ji vynalezl Kanaďan?',
+      options: ['Hawaii znělo lépe než „Ontario Surprise"', 'Použil ananasovou konzervu značky Hawaiian Brand', 'Omyl v překladu – původně se jmenovala „Awaiian" bez H'],
+      correct: 1,
+      explanation: 'Sam Panopoulos v roce 1962 sáhl po konzerve s nápisem Hawaiian – a název uvízl.',
+    },
+    {
+      q: 'Kolik procent svého DNA sdílíme s banánem?',
+      options: ['0 % – to je přece nesmysl', '12 % – jen ty opravdu základní buněčné funkce', 'Přibližně 60 % – buněčné mechanismy jsou překvapivě podobné'],
+      correct: 2,
+      explanation: 'Sdílíme geny pro základní buněčné procesy. Takže banánový chléb je skoro kanibalismus.',
+    },
   ],
 };
 

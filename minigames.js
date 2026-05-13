@@ -817,7 +817,9 @@ const MINIGAMES = (() => {
   // 7. KVÍZ (Dr. Fíša)
   // ===========================================================
   function startKviz(container) {
-    const questions = GAME_DATA.quizQuestions.slice().sort(() => Math.random() - 0.5);
+    const _qs = [...GAME_DATA.quizQuestions];
+    for (let i = _qs.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [_qs[i], _qs[j]] = [_qs[j], _qs[i]]; }
+    const questions = _qs;
     let qIdx = 0, correct = 0, wrong = 0;
     let timeLeft = 15, timerInterval = null;
 
