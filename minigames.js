@@ -139,7 +139,16 @@ const MINIGAMES = (() => {
   // 2. PŘESMYČKY – slova 6-10 písmen
   // ===========================================================
   function startAnagramy(container) {
-    const words = [
+    function shuffleArr(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    const localWords = [
       { word: 'ŠLAPKA', hint: 'Zlí jazykové jí říkají pedál.' },
       { word: 'GALUSKA', hint: 'Štíhlá modelka mezi pneumatikami.' },
       { word: 'ZVONEK', hint: 'Jediný způsob, jak legálně plašit chodce.' },
@@ -157,7 +166,9 @@ const MINIGAMES = (() => {
       { word: 'ZÁCHODY', hint: 'Místo, kde se v hospodě nejvíc filosofuje.' },
       { word: 'TATARÁK', hint: 'Syrové štěstí s hromadou česneku.' },
       { word: 'PIVOVAR', hint: 'Továrna na sny a ranní kocovinu.' },
-    ].sort(() => Math.random() - 0.5);
+    ];
+
+    const words = shuffleArr([...localWords, ...GAME_DATA.anagramWords]);
 
     const total = 8;
     let current = 0, correct = 0;
@@ -690,7 +701,15 @@ const MINIGAMES = (() => {
   // 6. ŠIBENICE
   // ===========================================================
   function startSibenice(container) {
-    const wordList = GAME_DATA.hangmanWords.slice().sort(() => Math.random() - 0.5).slice(0, 5);
+    function shuffleArr(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+    const wordList = shuffleArr(GAME_DATA.hangmanWords).slice(0, 5);
     let wordIdx = 0, correct = 0, maxErrors = 5, showHint = false;
 
     function renderWord() {
