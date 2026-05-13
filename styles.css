@@ -346,6 +346,8 @@ html, body {
   gap: 0;
   padding: 0;
   overflow-y: auto;
+  justify-content: flex-start;
+  align-items: stretch;
 }
 
 .loc-header {
@@ -476,6 +478,8 @@ html, body {
   background: #0d0600;
   padding: 0;
   overflow-y: auto;
+  justify-content: flex-start;
+  align-items: stretch;
 }
 
 .minigame-wrapper {
